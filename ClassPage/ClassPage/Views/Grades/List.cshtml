@@ -1,0 +1,30 @@
+﻿@model List<Grade>
+
+@{
+    ViewData["Title"] = $"{Model.First().Student.FirstName}'s grades";
+}
+
+<h1>Grades for: @Model.First().Student.FirstName</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Grade</th>
+            <th>Date</th>
+            <th>Teacher</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    </thead>
+    @foreach (Grade g in Model)
+    {
+        <tr>
+            <td>@g.Subject.SubjectName</td>
+            <td>@g.Value</td>
+            <td>@g.DateAdded.ToShortDateString()</td>
+            <td>@g.Teacher.FirstName @g.Teacher.LastName</td>
+            <td>@g.Description</td>
+            <td>@Html.ActionLink("Delete", "Delete", "Grades", new { gradeId = g.Id }, new { @class = "btn btn-danger" })</td>
+        </tr>
+    }
+</table>
