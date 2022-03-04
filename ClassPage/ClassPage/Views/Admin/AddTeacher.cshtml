@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Add Teacher to DB";
+}
+
+<form asp-action="AddTeacher" asp-controller="Admin" method="post">
+    <div class="form-group">
+        <label>First Name</label>
+        <input type="text" class="form-control" name="firstName" required />
+    </div>
+    <div class="form-group">
+        <label>Middle Name</label>
+        <input type="text" class="form-control" name="middleName" />
+    </div>
+    <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" class="form-control" name="lastName" required />
+    </div>
+    <div class="form-group">
+        <label>Subjects</label>
+        <br />
+        @foreach (Subject s in ViewBag.SubjectList)
+        {
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="subjectIds" value="@s.Id">
+                <label class="form-check-label">
+                    @s.SubjectName
+                </label>
+            </div>
+        }
+    </div>
+    <div class="form-group">
+        <label>Classes</label>
+        <br />
+        @foreach (Class c in ViewBag.ClassList)
+        {
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="classIds" value="@c.Id">
+                <label class="form-check-label">
+                    @c.ClassName
+                </label>
+            </div>
+        }
+    </div>
+    <div class="form-group">
+        <label>E-mail address</label>
+        <input name="email" class="form-control" type="email" required />
+    </div>
+    <div class="form-group">
+        <label>Telephone number</label>
+        <input name="phone" class="form-control" type="tel" />
+    </div>
+    <input type="submit" value="Go" class="btn btn-primary" />
+</form>
