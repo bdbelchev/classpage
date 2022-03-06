@@ -161,5 +161,30 @@ namespace ClassPage.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public IActionResult DeleteStudent(int studentId)
+        {
+            Student student = _context.Students.First(s => s.Id == studentId);
+            _context.Grades.RemoveRange(_context.Grades.Where(t => t.StudentId == studentId));
+
+            _context.Students.Remove(student);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult DeleteTeacher(int teacherId)
+        {
+            Teacher teacher = _context.Teachers.First(s => s.Id == teacherId);
+
+            _context.TeachersSubjects.RemoveRange(_context.TeachersSubjects.Where(t => t.TeacherId == teacherId));
+            _context.ClassesTeachers.RemoveRange(_context.ClassesTeachers.Where(t => t.TeacherId == teacherId));
+            _context.Grades.RemoveRange(_context.Grades.Where(t => t.TeacherId == teacherId));
+
+            _context.Teachers.Remove(teacher);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
     }
 }
