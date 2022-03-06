@@ -1,0 +1,59 @@
+﻿@model Teacher
+
+@{
+    ViewData["Title"] = $"Teacher details - {Model.FirstName} {Model.LastName}";
+}
+
+<h1>Teacher details: @Model.FirstName @Model.LastName</h1>
+<br />
+
+<div>
+    <p>First name: <b>@Model.FirstName</b></p>
+    @if (Model.MiddleName != null)
+    {
+        <p>Middle name: <b>@Model.MiddleName</b></p>
+    }
+    <p>Last name: <b>@Model.LastName</b></p>
+
+    <p>
+        Subjects: <b>@string.Join(", ", Model.TeachersSubjects.Select(ts => ts.Subject.SubjectName))</b>
+    </p>
+
+    @if (Model.Class != null)
+    {
+        <p>
+            Main teacher of class:
+            <b>
+                @Html.ActionLink(Model.Class.ClassName, "ClassDetails", "Directory", new
+                {
+                    classId = Model.Class.Id
+                })
+            </b>
+        </p>
+    }
+</div>
+<br />
+
+<div>
+    <p>Contact information:</p>
+    <p>E-mail address: <a href="mailto:@Model.Email">@Model.Email</a></p>
+    <p>Telephone number: +359 @Model.Phone</p>
+</div>
+
+<br />
+
+<div>
+    <p>Teaches classes:</p>
+
+    @foreach (ClassesTeacher c in Model.ClassesTeachers)
+    {
+        <p>
+            @Html.ActionLink(c.Class.ClassName, "ClassDetails", "Directory", new { classId = c.ClassId })
+        </p>
+    }
+</div>
+<div>
+    @Html.ActionLink("Edit teacher information", "EditTeacher", "Admin", new { teacherId = Model.Id }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Delete teacher", "DeleteTeacher", "Admin", new { teacherId = Model.Id }, new { @class = "btn btn-danger" })
+    <p>These buttons will be visible only to administrators, once account system is implemented.</p>
+</div>

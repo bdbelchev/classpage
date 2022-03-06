@@ -1,0 +1,40 @@
+﻿@model Student
+
+@{
+    ViewData["Title"] = $"Student details - {Model.FirstName} {Model.LastName}";
+}
+
+<h1>Student details: @Model.FirstName @Model.LastName</h1>
+<br />
+
+<div>
+    <p>First name: <b>@Model.FirstName</b></p>
+    @if (Model.MiddleName != null)
+    {
+        <p>Middle name: <b>@Model.MiddleName</b></p>
+    }
+    <p>Last name: <b>@Model.LastName</b></p>
+</div>
+
+<p>
+    Class:
+    <b>
+        @Html.ActionLink(Model.Class.ClassName, "ClassDetails", "Directory", new { classId = Model.ClassId })
+    </b>
+</p>
+
+<br />
+
+<div>
+    <p>Contact information:</p>
+    <p>E-mail address: <a href="mailto:@Model.Email">@Model.Email</a></p>
+    <p>Telephone number: +359 @Model.Phone</p>
+</div>
+
+@Html.ActionLink("Go to grades", "List", "Grades", new { studentId = Model.Id }, new { @class = "btn btn-primary" })
+<br />
+<div>
+    @Html.ActionLink("Edit student information", "EditStudent", "Admin", new { studentId = Model.Id }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Delete student", "DeleteStudent", "Admin", new { studentId = Model.Id }, new { @class = "btn btn-danger" })
+    <p>These buttons will be visible only to administrators, once account system is implemented.</p>
+</div>

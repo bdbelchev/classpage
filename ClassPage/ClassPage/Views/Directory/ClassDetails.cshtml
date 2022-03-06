@@ -1,0 +1,35 @@
+﻿@model Class
+
+@{
+    ViewData["Title"] = "Class details - " + Model.ClassName;
+}
+
+<h1>Class details: @Model.ClassName</h1>
+<br />
+
+<p>
+    <b>Main teacher:</b>
+    <b>@Html.ActionLink($"{Model.MainTeacher.FirstName} {Model.MainTeacher.LastName}", "TeacherDetails", "Directory", new { teacherId = Model.MainTeacherId })</b>
+</p>
+
+<div>
+    <b>Students:</b>
+
+    @foreach (Student s in Model.Students)
+    {
+        <p>
+            @Html.ActionLink($"{s.FirstName} {s.LastName}", "StudentDetails", "Directory", new { studentId = s.Id })
+        </p>
+    }
+</div>
+
+<div>
+    <b>Teachers:</b>
+
+    @foreach (ClassesTeacher s in Model.ClassesTeachers)
+    {
+        <p>
+            @Html.ActionLink($"{s.Teacher.FirstName} {s.Teacher.LastName}", "TeacherDetails", "Directory", new { teacherId = s.TeacherId }) - @string.Join(", ", s.Teacher.TeachersSubjects.Select(ts => ts.Subject.SubjectName))
+        </p>
+    }
+</div>
