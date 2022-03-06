@@ -2,4 +2,11 @@
     ViewData["Title"] = "Admin Tools";
 }
 
-<h1>//TODO</h1>
+<h1>Admin Tools</h1>
+<div>
+    <h2>Add people:</h2>
+    @Html.ActionLink("New teacher", "AddTeacher", "Admin", null, new { @class = "btn btn-primary" })
+    @Html.ActionLink("New student", "AddStudent", "Admin", null, new { @class = "btn btn-primary" })
+</div>
+<br />
+<p>To manage existing users, please use the Directory.</p>
