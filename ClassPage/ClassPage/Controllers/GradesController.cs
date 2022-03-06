@@ -69,6 +69,30 @@ namespace ClassPage.Controllers
             return RedirectToAction("List", new { studentId });
         }
 
+        public IActionResult Edit(int gradeId)
+        {
+            Grade grade = _context.Grades.Include(s=>s.Student).Include(t => t.Teacher).ThenInclude(s => s.TeachersSubjects).ThenInclude(s => s.Subject)
+                .Include(s => s.Teacher.ClassesTeachers).ThenInclude(s => s.Class).First(s => s.Id == gradeId);
+            return View(grade);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(int id, int studentId, int subjectId, int teacherId, double gradeValue, DateTime date,
+            string description)
+        {
+            Grade grade = _context.Grades.First(g => g.Id == id);
+            grade.TeacherId = teacherId;
+            grade.StudentId = studentId;
+            grade.SubjectId = subjectId;
+            grade.Value = gradeValue;
+            grade.DateAdded = date;
+            grade.Description = description;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("List", new { studentId });
+        }
+
         public IActionResult Delete(int gradeId)
         {
             Grade grade = _context.Grades.First(g => g.Id == gradeId);
