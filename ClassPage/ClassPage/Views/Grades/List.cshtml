@@ -28,8 +28,11 @@ else
                 <td>@g.DateAdded.ToShortDateString()</td>
                 <td>@g.Teacher.FirstName @g.Teacher.LastName</td>
                 <td>@g.Description</td>
-                <td>@Html.ActionLink("Delete", "Delete", "Grades", new { gradeId = g.Id }, new { @class = "btn btn-danger" })</td>
-            </tr>
-        }
+                <td>
+                    @Html.ActionLink("Edit", "Edit", "Grades", new { gradeId = g.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Delete", "Delete", "Grades", new { gradeId = g.Id }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
     </table>
 }

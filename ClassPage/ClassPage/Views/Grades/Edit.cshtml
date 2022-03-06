@@ -1,20 +1,20 @@
 ﻿@{
-    ViewData["Title"] = "Add grade";
+    ViewData["Title"] = "Edit grade";
 }
 
-@model Teacher
+@model Grade
 
-<form asp-action="Add" asp-controller="Grades" method="post">
+<form asp-action="Edit" asp-controller="Grades" asp-route-id="@Model.Id" method="post">
     <div class="form-group">
         <label>Teacher</label>
         <select class="form-control disabled" name="teacherId">
-            <option value="@Model.Id">@Model.FirstName @Model.LastName</option>
+            <option value="@Model.TeacherId">@Model.Teacher.FirstName @Model.Teacher.LastName</option>
         </select>
     </div>
     <div class="form-group">
         <label>Subject</label>
         <select class="form-control" name="subjectId">
-            @foreach (TeachersSubject s in Model.TeachersSubjects)
+            @foreach (TeachersSubject s in Model.Teacher.TeachersSubjects)
             {
                 <option value="@s.SubjectId">@s.Subject.SubjectName</option>
             }
@@ -23,8 +23,10 @@
     <div class="form-group">
         <label>Class</label>
         <select class="form-control" id="classId">
-            <option disabled="disabled" selected="selected">Select class</option>
-            @foreach (ClassesTeacher s in Model.ClassesTeachers)
+            <option disabled="disabled">Current class</option>
+            <option selected="selected" value="@Model.Student.ClassId">@Model.Student.Class.ClassName</option>
+            <option disabled="disabled">Select class</option>
+            @foreach (ClassesTeacher s in Model.Teacher.ClassesTeachers)
             {
                 <option value="@s.ClassId">@s.Class.ClassName</option>
             }
@@ -33,26 +35,22 @@
     <div class="form-group">
         <label>Student</label>
         <select id="studentId" name="studentId" class="form-control" required>
-            <option disabled="disabled" selected="selected">Select student</option>
+            <option disabled="disabled">Current student</option>
+            <option selected="selected" value="@Model.StudentId">@Model.Student.FirstName @Model.Student.LastName</option>
+            <option disabled="disabled">Select new class to populate student list</option>
         </select>
     </div>
     <div class="form-group">
         <label>Grade</label>
-        <select name="gradeValue" class="form-control" required>
-            <option disabled="disabled" selected="selected">Select grade</option>
-            @for (int i = 2; i <= 6; i++)
-            {
-                <option value="@i">@i</option>
-            }
-        </select>
+        <input type="number" class="form-control" name="gradeValue" value="@Model.Value" />
     </div>
     <div class="form-group">
         <label>Date</label>
-        <input type="date" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" name="date" class="form-control" required />
+        <input type="date" value="@Model.DateAdded.Date.ToString("yyyy-MM-dd")" name="date" class="form-control" required />
     </div>
     <div class="form-group">
         <label>Description</label>
-        <input name="description" class="form-control" type="text" />
+        <input name="description" value="@Model.Description" class="form-control" type="text" />
     </div>
     <input type="submit" value="Go" class="btn btn-primary" />
 </form>
