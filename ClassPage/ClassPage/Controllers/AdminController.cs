@@ -4,17 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ClassPage.Models;
+using ClassPage.Models.DTOs;
+using ClassPage.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassPage.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly schooldbContext _context;
+        private readonly SchooldbContext _context;
+        private readonly TeacherService teacherService;
 
-        public AdminController(schooldbContext context)
+        public AdminController(SchooldbContext context, TeacherService teacherService)
         {
             _context = context;
+            this.teacherService = teacherService;
         }
 
         public IActionResult Index()
@@ -64,31 +68,9 @@ namespace ClassPage.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddTeacher(string firstName, string middleName, string lastName, string email,
-            string phone, List<int> subjectIds, List<int> classIds)
+        public IActionResult AddTeacher(TeacherDTO teacher)
         {
-            Teacher teacher = new Teacher();
-            teacher.FirstName = firstName;
-            teacher.MiddleName = middleName;
-            teacher.LastName = lastName;
-            teacher.Email = email;
-            teacher.Phone = phone;
-
-            foreach (int subjectId in subjectIds)
-            {
-                teacher.TeachersSubjects.Add(new TeachersSubject { SubjectId = subjectId, Teacher = teacher });
-            }
-
-            foreach (int classId in classIds)
-            {
-                teacher.ClassesTeachers.Add(new ClassesTeacher { ClassId = classId, Teacher = teacher });
-            }
-
-            using (_context)
-            {
-                _context.Teachers.Add(teacher);
-                _context.SaveChanges();
-            }
+            teacherService.Add(teacher);
 
             return RedirectToAction("Index");
         }
@@ -130,34 +112,9 @@ namespace ClassPage.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditTeacher(int id, string firstName, string middleName, string lastName, string email,
-            string phone, List<int> subjectIds, List<int> classIds)
+        public IActionResult EditTeacher(int id, TeacherDTO teacherDTO)
         {
-            Teacher teacher = _context.Teachers.First(t => t.Id == id);
-
-            _context.TeachersSubjects.RemoveRange(_context.TeachersSubjects.Where(t => t.TeacherId == id));
-            _context.ClassesTeachers.RemoveRange(_context.ClassesTeachers.Where(t => t.TeacherId == id));
-
-            _context.SaveChanges();
-
-            teacher.FirstName = firstName;
-            teacher.MiddleName = middleName;
-            teacher.LastName = lastName;
-            teacher.Email = email;
-            teacher.Phone = phone;
-
-
-            foreach (int subjectId in subjectIds)
-            {
-                teacher.TeachersSubjects.Add(new TeachersSubject { SubjectId = subjectId, Teacher = teacher });
-            }
-
-            foreach (int classId in classIds)
-            {
-                teacher.ClassesTeachers.Add(new ClassesTeacher { ClassId = classId, Teacher = teacher });
-            }
-
-            _context.SaveChanges();
+            teacherService.Edit(id, teacherDTO);
 
             return RedirectToAction("Index");
         }
@@ -175,14 +132,7 @@ namespace ClassPage.Controllers
 
         public IActionResult DeleteTeacher(int teacherId)
         {
-            Teacher teacher = _context.Teachers.First(s => s.Id == teacherId);
-
-            _context.TeachersSubjects.RemoveRange(_context.TeachersSubjects.Where(t => t.TeacherId == teacherId));
-            _context.ClassesTeachers.RemoveRange(_context.ClassesTeachers.Where(t => t.TeacherId == teacherId));
-            _context.Grades.RemoveRange(_context.Grades.Where(t => t.TeacherId == teacherId));
-
-            _context.Teachers.Remove(teacher);
-            _context.SaveChanges();
+            teacherService.Delete(teacherId);
 
             return RedirectToAction("Index");
         }
