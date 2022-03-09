@@ -10,9 +10,9 @@ namespace ClassPage.Controllers
 {
     public class DirectoryController : Controller
     {
-        private readonly schooldbContext _context;
+        private readonly SchooldbContext _context;
 
-        public DirectoryController(schooldbContext context)
+        public DirectoryController(SchooldbContext context)
         {
             _context = context;
         }

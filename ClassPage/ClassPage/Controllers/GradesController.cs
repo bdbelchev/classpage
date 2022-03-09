@@ -11,9 +11,9 @@ namespace ClassPage.Controllers
 {
     public class GradesController : Controller
     {
-        private readonly schooldbContext _context;
+        private readonly SchooldbContext _context;
 
-        public GradesController(schooldbContext context)
+        public GradesController(SchooldbContext context)
         {
             _context = context;
         }

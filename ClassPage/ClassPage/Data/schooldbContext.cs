@@ -8,13 +8,13 @@ using Microsoft.Extensions.Configuration;
 
 namespace ClassPage.Models
 {
-    public partial class schooldbContext : DbContext
+    public partial class SchooldbContext : DbContext
     {
-        public schooldbContext()
+        public SchooldbContext()
         {
         }
 
-        public schooldbContext(DbContextOptions<schooldbContext> options)
+        public SchooldbContext(DbContextOptions<SchooldbContext> options)
             : base(options)
         {
         }

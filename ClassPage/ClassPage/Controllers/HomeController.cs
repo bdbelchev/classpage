@@ -12,9 +12,9 @@ namespace ClassPage.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly schooldbContext _context;
+        private readonly SchooldbContext _context;
 
-        public HomeController(schooldbContext context)
+        public HomeController(SchooldbContext context)
         {
             _context = context;
         }
