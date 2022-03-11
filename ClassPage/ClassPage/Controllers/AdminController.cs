@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ClassPage.Data;
 using ClassPage.Models;
 using ClassPage.Models.DTOs;
 using ClassPage.Services;
@@ -14,11 +15,13 @@ namespace ClassPage.Controllers
     {
         private readonly SchooldbContext _context;
         private readonly TeacherService teacherService;
+        private readonly StudentService studentService;
 
-        public AdminController(SchooldbContext context, TeacherService teacherService)
+        public AdminController(SchooldbContext context, TeacherService teacherService, StudentService studentService)
         {
             _context = context;
             this.teacherService = teacherService;
+            this.studentService = studentService;
         }
 
         public IActionResult Index()
@@ -37,21 +40,9 @@ namespace ClassPage.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddStudent(string firstName, string middleName, string lastName, int classId, string email, string phone)
+        public IActionResult AddStudent(StudentDTO student)
         {
-            Student student = new Student();
-            student.FirstName = firstName;
-            student.MiddleName = middleName;
-            student.LastName = lastName;
-            student.ClassId = classId;
-            student.Email = email;
-            student.Phone = phone;
-
-            using (_context)
-            {
-                _context.Students.Add(student);
-                _context.SaveChanges();
-            }
+            studentService.Add(student);
 
             return RedirectToAction("Index");
         }
@@ -85,18 +76,9 @@ namespace ClassPage.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditStudent(int id, string firstName, string middleName, string lastName, int classId,
-            string email, string phone)
+        public IActionResult EditStudent(int id, StudentDTO student)
         {
-            Student student = _context.Students.First(s => s.Id == id);
-            student.FirstName = firstName;
-            student.MiddleName = middleName;
-            student.LastName = lastName;
-            student.ClassId = classId;
-            student.Email = email;
-            student.Phone = phone;
-
-            _context.SaveChanges();
+            studentService.Edit(id, student);
 
             return RedirectToAction("Index");
         }
@@ -121,11 +103,7 @@ namespace ClassPage.Controllers
 
         public IActionResult DeleteStudent(int studentId)
         {
-            Student student = _context.Students.First(s => s.Id == studentId);
-            _context.Grades.RemoveRange(_context.Grades.Where(t => t.StudentId == studentId));
-
-            _context.Students.Remove(student);
-            _context.SaveChanges();
+            studentService.Delete(studentId);
 
             return RedirectToAction("Index");
         }

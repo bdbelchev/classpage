@@ -1,12 +1,9 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using ClassPage.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
-namespace ClassPage.Models
+namespace ClassPage.Data
 {
     public partial class SchooldbContext : DbContext
     {
