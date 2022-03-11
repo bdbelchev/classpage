@@ -38,7 +38,9 @@ namespace ClassPage
                 .AddEntityFrameworkStores<SchooldbContext>();
             services.AddControllersWithViews();
 
-            services.AddScoped<TeacherService>();
+            services.AddScoped<ITeacherService, TeacherService>();
+            services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IGradeService, GradeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

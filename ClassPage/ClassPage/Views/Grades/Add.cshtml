@@ -38,7 +38,7 @@
     </div>
     <div class="form-group">
         <label>Grade</label>
-        <select name="gradeValue" class="form-control" required>
+        <select name="value" class="form-control" required>
             <option disabled="disabled" selected="selected">Select grade</option>
             @for (int i = 2; i <= 6; i++)
             {
@@ -48,7 +48,7 @@
     </div>
     <div class="form-group">
         <label>Date</label>
-        <input type="date" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" name="date" class="form-control" required />
+        <input type="date" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" name="dateAdded" class="form-control" required />
     </div>
     <div class="form-group">
         <label>Description</label>

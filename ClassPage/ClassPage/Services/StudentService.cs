@@ -38,6 +38,7 @@ namespace ClassPage.Services
             student.Email = studentDTO.Email;
             student.Phone = studentDTO.Phone;
 
+            _context.Students.Update(student);
             _context.SaveChanges();
         }
 
