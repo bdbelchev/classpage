@@ -14,10 +14,10 @@ namespace ClassPage.Controllers
     public class AdminController : Controller
     {
         private readonly SchooldbContext _context;
-        private readonly TeacherService teacherService;
-        private readonly StudentService studentService;
+        private readonly ITeacherService teacherService;
+        private readonly IStudentService studentService;
 
-        public AdminController(SchooldbContext context, TeacherService teacherService, StudentService studentService)
+        public AdminController(SchooldbContext context, ITeacherService teacherService, IStudentService studentService)
         {
             _context = context;
             this.teacherService = teacherService;

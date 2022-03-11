@@ -8,7 +8,7 @@ using ClassPage.Models.DTOs;
 
 namespace ClassPage.Services
 {
-    public class StudentService
+    public class StudentService : IStudentService
     {
         private readonly SchooldbContext _context;
 
@@ -19,13 +19,7 @@ namespace ClassPage.Services
 
         public void Add(StudentDTO studentDTO)
         {
-            Student student = new Student();
-            student.FirstName = studentDTO.FirstName;
-            student.MiddleName = studentDTO.MiddleName;
-            student.LastName = studentDTO.LastName;
-            student.ClassId = studentDTO.ClassId;
-            student.Email = studentDTO.Email;
-            student.Phone = studentDTO.Phone;
+            Student student = toEntity(studentDTO);
 
             using (_context)
             {

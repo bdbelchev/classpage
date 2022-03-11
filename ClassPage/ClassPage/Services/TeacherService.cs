@@ -8,7 +8,7 @@ using ClassPage.Models.DTOs;
 
 namespace ClassPage.Services
 {
-    public class TeacherService
+    public class TeacherService : ITeacherService
     {
         private readonly SchooldbContext _context;
 
