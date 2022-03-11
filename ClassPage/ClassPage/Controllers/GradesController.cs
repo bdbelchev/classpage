@@ -3,7 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ClassPage.Data;
 using ClassPage.Models;
+using ClassPage.Models.DTOs;
+using ClassPage.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +14,13 @@ namespace ClassPage.Controllers
 {
     public class GradesController : Controller
     {
-        private readonly schooldbContext _context;
+        private readonly SchooldbContext _context;
+        private readonly IGradeService gradeService;
 
-        public GradesController(schooldbContext context)
+        public GradesController(SchooldbContext context, IGradeService gradeService)
         {
             _context = context;
+            this.gradeService = gradeService;
         }
 
         public IActionResult Index()
@@ -52,54 +57,33 @@ namespace ClassPage.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(int studentId, int subjectId, int teacherId, double gradeValue, DateTime date,
-            string description)
+        public IActionResult Add(GradeDTO gradeDto)
         {
-            Grade grade = new Grade();
-            grade.TeacherId = teacherId;
-            grade.StudentId = studentId;
-            grade.SubjectId = subjectId;
-            grade.Value = gradeValue;
-            grade.DateAdded = date;
-            grade.Description = description;
+            gradeService.Add(gradeDto);
 
-            _context.Grades.Add(grade);
-            _context.SaveChanges();
-
-            return RedirectToAction("List", new { studentId });
+            return RedirectToAction("List", new { gradeDto.StudentId });
         }
 
         public IActionResult Edit(int gradeId)
         {
-            Grade grade = _context.Grades.Include(s=>s.Student).Include(t => t.Teacher).ThenInclude(s => s.TeachersSubjects).ThenInclude(s => s.Subject)
+            Grade grade = _context.Grades.Include(s => s.Student).Include(t => t.Teacher).ThenInclude(s => s.TeachersSubjects).ThenInclude(s => s.Subject)
                 .Include(s => s.Teacher.ClassesTeachers).ThenInclude(s => s.Class).First(s => s.Id == gradeId);
             return View(grade);
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, int studentId, int subjectId, int teacherId, double gradeValue, DateTime date,
-            string description)
+        public IActionResult Edit(int id, GradeDTO gradeDto)
         {
-            Grade grade = _context.Grades.First(g => g.Id == id);
-            grade.TeacherId = teacherId;
-            grade.StudentId = studentId;
-            grade.SubjectId = subjectId;
-            grade.Value = gradeValue;
-            grade.DateAdded = date;
-            grade.Description = description;
+            gradeService.Edit(id, gradeDto);
 
-            _context.SaveChanges();
-
-            return RedirectToAction("List", new { studentId });
+            return RedirectToAction("List", new { gradeDto.StudentId });
         }
 
         public IActionResult Delete(int gradeId)
         {
-            Grade grade = _context.Grades.First(g => g.Id == gradeId);
-            _context.Grades.Remove(grade);
-            _context.SaveChanges();
+            gradeService.Delete(gradeId);
 
-            return RedirectToAction("List", new { grade.StudentId });
+            return RedirectToAction("List", new{});
         }
     }
 }

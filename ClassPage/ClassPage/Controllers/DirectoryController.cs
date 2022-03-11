@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ClassPage.Data;
 using ClassPage.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,9 +11,9 @@ namespace ClassPage.Controllers
 {
     public class DirectoryController : Controller
     {
-        private readonly schooldbContext _context;
+        private readonly SchooldbContext _context;
 
-        public DirectoryController(schooldbContext context)
+        public DirectoryController(SchooldbContext context)
         {
             _context = context;
         }

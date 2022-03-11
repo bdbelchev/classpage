@@ -1,20 +1,17 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using ClassPage.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
-namespace ClassPage.Models
+namespace ClassPage.Data
 {
-    public partial class schooldbContext : DbContext
+    public partial class SchooldbContext : DbContext
     {
-        public schooldbContext()
+        public SchooldbContext()
         {
         }
 
-        public schooldbContext(DbContextOptions<schooldbContext> options)
+        public SchooldbContext(DbContextOptions<SchooldbContext> options)
             : base(options)
         {
         }

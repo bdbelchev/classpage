@@ -3,18 +3,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ClassPage.Data;
 using ClassPage.Models;
+using ClassPage.Models.DTOs;
+using ClassPage.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassPage.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly schooldbContext _context;
+        private readonly SchooldbContext _context;
+        private readonly ITeacherService teacherService;
+        private readonly IStudentService studentService;
 
-        public AdminController(schooldbContext context)
+        public AdminController(SchooldbContext context, ITeacherService teacherService, IStudentService studentService)
         {
             _context = context;
+            this.teacherService = teacherService;
+            this.studentService = studentService;
         }
 
         public IActionResult Index()
@@ -33,21 +40,9 @@ namespace ClassPage.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddStudent(string firstName, string middleName, string lastName, int classId, string email, string phone)
+        public IActionResult AddStudent(StudentDTO student)
         {
-            Student student = new Student();
-            student.FirstName = firstName;
-            student.MiddleName = middleName;
-            student.LastName = lastName;
-            student.ClassId = classId;
-            student.Email = email;
-            student.Phone = phone;
-
-            using (_context)
-            {
-                _context.Students.Add(student);
-                _context.SaveChanges();
-            }
+            studentService.Add(student);
 
             return RedirectToAction("Index");
         }
@@ -64,31 +59,9 @@ namespace ClassPage.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddTeacher(string firstName, string middleName, string lastName, string email,
-            string phone, List<int> subjectIds, List<int> classIds)
+        public IActionResult AddTeacher(TeacherDTO teacher)
         {
-            Teacher teacher = new Teacher();
-            teacher.FirstName = firstName;
-            teacher.MiddleName = middleName;
-            teacher.LastName = lastName;
-            teacher.Email = email;
-            teacher.Phone = phone;
-
-            foreach (int subjectId in subjectIds)
-            {
-                teacher.TeachersSubjects.Add(new TeachersSubject { SubjectId = subjectId, Teacher = teacher });
-            }
-
-            foreach (int classId in classIds)
-            {
-                teacher.ClassesTeachers.Add(new ClassesTeacher { ClassId = classId, Teacher = teacher });
-            }
-
-            using (_context)
-            {
-                _context.Teachers.Add(teacher);
-                _context.SaveChanges();
-            }
+            teacherService.Add(teacher);
 
             return RedirectToAction("Index");
         }
@@ -103,18 +76,9 @@ namespace ClassPage.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditStudent(int id, string firstName, string middleName, string lastName, int classId,
-            string email, string phone)
+        public IActionResult EditStudent(int id, StudentDTO student)
         {
-            Student student = _context.Students.First(s => s.Id == id);
-            student.FirstName = firstName;
-            student.MiddleName = middleName;
-            student.LastName = lastName;
-            student.ClassId = classId;
-            student.Email = email;
-            student.Phone = phone;
-
-            _context.SaveChanges();
+            studentService.Edit(id, student);
 
             return RedirectToAction("Index");
         }
@@ -130,59 +94,23 @@ namespace ClassPage.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditTeacher(int id, string firstName, string middleName, string lastName, string email,
-            string phone, List<int> subjectIds, List<int> classIds)
+        public IActionResult EditTeacher(int id, TeacherDTO teacherDTO)
         {
-            Teacher teacher = _context.Teachers.First(t => t.Id == id);
-
-            _context.TeachersSubjects.RemoveRange(_context.TeachersSubjects.Where(t => t.TeacherId == id));
-            _context.ClassesTeachers.RemoveRange(_context.ClassesTeachers.Where(t => t.TeacherId == id));
-
-            _context.SaveChanges();
-
-            teacher.FirstName = firstName;
-            teacher.MiddleName = middleName;
-            teacher.LastName = lastName;
-            teacher.Email = email;
-            teacher.Phone = phone;
-
-
-            foreach (int subjectId in subjectIds)
-            {
-                teacher.TeachersSubjects.Add(new TeachersSubject { SubjectId = subjectId, Teacher = teacher });
-            }
-
-            foreach (int classId in classIds)
-            {
-                teacher.ClassesTeachers.Add(new ClassesTeacher { ClassId = classId, Teacher = teacher });
-            }
-
-            _context.SaveChanges();
+            teacherService.Edit(id, teacherDTO);
 
             return RedirectToAction("Index");
         }
 
         public IActionResult DeleteStudent(int studentId)
         {
-            Student student = _context.Students.First(s => s.Id == studentId);
-            _context.Grades.RemoveRange(_context.Grades.Where(t => t.StudentId == studentId));
-
-            _context.Students.Remove(student);
-            _context.SaveChanges();
+            studentService.Delete(studentId);
 
             return RedirectToAction("Index");
         }
 
         public IActionResult DeleteTeacher(int teacherId)
         {
-            Teacher teacher = _context.Teachers.First(s => s.Id == teacherId);
-
-            _context.TeachersSubjects.RemoveRange(_context.TeachersSubjects.Where(t => t.TeacherId == teacherId));
-            _context.ClassesTeachers.RemoveRange(_context.ClassesTeachers.Where(t => t.TeacherId == teacherId));
-            _context.Grades.RemoveRange(_context.Grades.Where(t => t.TeacherId == teacherId));
-
-            _context.Teachers.Remove(teacher);
-            _context.SaveChanges();
+            teacherService.Delete(teacherId);
 
             return RedirectToAction("Index");
         }
