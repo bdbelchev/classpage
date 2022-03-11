@@ -19,7 +19,7 @@
 <p>
     Class:
     <b>
-        @Html.ActionLink(Model.Class.ClassName, "ClassDetails", "Directory", new { classId = Model.ClassId })
+        @Html.ActionLink(Model.Class.ClassName, "ClassDetails", "Directory", new { id = Model.ClassId })
     </b>
 </p>
 
@@ -34,7 +34,7 @@
 @Html.ActionLink("Go to grades", "List", "Grades", new { studentId = Model.Id }, new { @class = "btn btn-primary" })
 <br />
 <div>
-    @Html.ActionLink("Edit student information", "EditStudent", "Admin", new { studentId = Model.Id }, new { @class = "btn btn-warning" })
-    @Html.ActionLink("Delete student", "DeleteStudent", "Admin", new { studentId = Model.Id }, new { @class = "btn btn-danger" })
+    @Html.ActionLink("Edit student information", "EditStudent", "Admin", new { id = Model.Id }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Delete student", "DeleteStudent", "Admin", new { id = Model.Id }, new { @class = "btn btn-danger" })
     <p>These buttons will be visible only to administrators, once account system is implemented.</p>
 </div>

@@ -26,7 +26,7 @@
             <b>
                 @Html.ActionLink(Model.Class.ClassName, "ClassDetails", "Directory", new
                 {
-                    classId = Model.Class.Id
+                    id = Model.Class.Id
                 })
             </b>
         </p>
@@ -48,12 +48,12 @@
     @foreach (ClassesTeacher c in Model.ClassesTeachers)
     {
         <p>
-            @Html.ActionLink(c.Class.ClassName, "ClassDetails", "Directory", new { classId = c.ClassId })
+            @Html.ActionLink(c.Class.ClassName, "ClassDetails", "Directory", new { id = c.ClassId })
         </p>
     }
 </div>
 <div>
-    @Html.ActionLink("Edit teacher information", "EditTeacher", "Admin", new { teacherId = Model.Id }, new { @class = "btn btn-warning" })
-    @Html.ActionLink("Delete teacher", "DeleteTeacher", "Admin", new { teacherId = Model.Id }, new { @class = "btn btn-danger" })
+    @Html.ActionLink("Edit teacher information", "EditTeacher", "Admin", new { id = Model.Id }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Delete teacher", "DeleteTeacher", "Admin", new { id = Model.Id }, new { @class = "btn btn-danger" })
     <p>These buttons will be visible only to administrators, once account system is implemented.</p>
 </div>

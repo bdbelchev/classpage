@@ -26,7 +26,7 @@
                 <td>@t.LastName</td>
                 <td>@string.Join(", ", t.TeachersSubjects.Select(ts => ts.Subject.SubjectName))</td>
                 <td>
-                    @Html.ActionLink("Go", "TeacherDetails", "Directory", new { teacherId = t.Id }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Go", "TeacherDetails", "Directory", new { id = t.Id }, new { @class = "btn btn-primary" })
                 </td>
             </tr>
         }

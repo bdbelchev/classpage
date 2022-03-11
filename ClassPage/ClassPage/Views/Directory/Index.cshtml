@@ -11,6 +11,6 @@
     <h2>Details by class: </h2>
     @foreach (Class c in ViewBag.ClassList)
     {
-        @Html.ActionLink(c.ClassName, "ClassDetails", "Directory", new {classId = c.Id}, new {@class = "btn btn-primary"})
+        @Html.ActionLink(c.ClassName, "ClassDetails", "Directory", new { id = c.Id }, new { @class = "btn btn-primary" })
     }
 </div>

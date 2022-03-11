@@ -44,7 +44,7 @@ namespace ClassPage.Controllers
         {
             studentService.Add(student);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("ListStudents", "Directory");
         }
 
         public IActionResult AddTeacher()
@@ -63,12 +63,12 @@ namespace ClassPage.Controllers
         {
             teacherService.Add(teacher);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("ListTeachers", "Directory");
         }
 
-        public IActionResult EditStudent(int studentId)
+        public IActionResult EditStudent(int id)
         {
-            Student student = _context.Students.Include(c => c.Class).First(s => s.Id == studentId);
+            Student student = _context.Students.Include(c => c.Class).First(s => s.Id == id);
 
             ViewBag.ClassList = _context.Classes.ToList();
 
@@ -80,12 +80,12 @@ namespace ClassPage.Controllers
         {
             studentService.Edit(id, student);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("StudentDetails", "Directory", new { studentId = id });
         }
 
-        public IActionResult EditTeacher(int teacherId)
+        public IActionResult EditTeacher(int id)
         {
-            Teacher teacher = _context.Teachers.Include(s => s.TeachersSubjects).ThenInclude(s => s.Subject).Include(c => c.ClassesTeachers).ThenInclude(c => c.Class).First(t => t.Id == teacherId);
+            Teacher teacher = _context.Teachers.Include(s => s.TeachersSubjects).ThenInclude(s => s.Subject).Include(c => c.ClassesTeachers).ThenInclude(c => c.Class).First(t => t.Id == id);
 
             ViewBag.ClassList = _context.Classes.ToList();
             ViewBag.SubjectList = _context.Subjects.ToList();
@@ -98,21 +98,23 @@ namespace ClassPage.Controllers
         {
             teacherService.Edit(id, teacherDTO);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("TeacherDetails", "Directory", new { teacherId = id });
         }
 
-        public IActionResult DeleteStudent(int studentId)
+        public IActionResult DeleteStudent(int id)
         {
-            studentService.Delete(studentId);
+            studentService.Delete(id);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("ListStudents", "Directory");
         }
 
-        public IActionResult DeleteTeacher(int teacherId)
+        public IActionResult DeleteTeacher(int id)
         {
-            teacherService.Delete(teacherId);
+            teacherService.Delete(id);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("ListTeachers", "Directory");
         }
+
+        //TODO: Make and redirect to a "success" page instead.
     }
 }

@@ -25,10 +25,10 @@
             <td>@s.MiddleName</td>
             <td>@s.LastName</td>
             <td>
-                @Html.ActionLink(s.Class.ClassName, "ClassDetails", "Directory", new { classId = s.ClassId })
+                @Html.ActionLink(s.Class.ClassName, "ClassDetails", "Directory", new { id = s.ClassId })
             </td>
             <td>
-                @Html.ActionLink("Go", $"StudentDetails", "Directory", new { studentId = s.Id }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Go", $"StudentDetails", "Directory", new { id = s.Id }, new { @class = "btn btn-primary" })
             </td>
         </tr>
     }
