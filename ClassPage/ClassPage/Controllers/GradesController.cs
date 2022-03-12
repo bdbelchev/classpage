@@ -7,11 +7,13 @@ using ClassPage.Data;
 using ClassPage.Models;
 using ClassPage.Models.DTOs;
 using ClassPage.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassPage.Controllers
 {
+    [Authorize(Policy = "IsMemberOfSchool")]
     public class GradesController : Controller
     {
         private readonly SchooldbContext _context;
@@ -49,6 +51,7 @@ namespace ClassPage.Controllers
             return View(grades);
         }
 
+        [Authorize(Policy = "StaffOnly")]
         public IActionResult Add(int teacherId)
         {
             Teacher teacher = _context.Teachers.Include(s => s.TeachersSubjects).ThenInclude(s => s.Subject)
@@ -57,6 +60,7 @@ namespace ClassPage.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "StaffOnly")]
         public IActionResult Add(GradeDTO gradeDto)
         {
             gradeService.Add(gradeDto);
@@ -64,6 +68,7 @@ namespace ClassPage.Controllers
             return RedirectToAction("List", new { gradeDto.StudentId });
         }
 
+        [Authorize(Policy = "StaffOnly")]
         public IActionResult Edit(int gradeId)
         {
             Grade grade = _context.Grades.Include(s => s.Student).Include(t => t.Teacher).ThenInclude(s => s.TeachersSubjects).ThenInclude(s => s.Subject)
@@ -72,6 +77,7 @@ namespace ClassPage.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "StaffOnly")]
         public IActionResult Edit(int id, GradeDTO gradeDto)
         {
             gradeService.Edit(id, gradeDto);
@@ -79,11 +85,12 @@ namespace ClassPage.Controllers
             return RedirectToAction("List", new { gradeDto.StudentId });
         }
 
+        [Authorize(Policy = "StaffOnly")]
         public IActionResult Delete(int gradeId)
         {
             gradeService.Delete(gradeId);
 
-            return RedirectToAction("List", new{});
+            return RedirectToAction("List", new { });
         }
     }
 }

@@ -5,10 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using ClassPage.Data;
 using ClassPage.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassPage.Controllers
 {
+    [Authorize(Policy = "IsMemberOfSchool")]
     public class DirectoryController : Controller
     {
         private readonly SchooldbContext _context;
