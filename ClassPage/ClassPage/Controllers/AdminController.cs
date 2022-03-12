@@ -2,31 +2,67 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ClassPage.Data;
 using ClassPage.Models;
 using ClassPage.Models.DTOs;
 using ClassPage.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassPage.Controllers
 {
+    [Authorize(Policy = "AdminOnly")]
     public class AdminController : Controller
     {
         private readonly SchooldbContext _context;
         private readonly ITeacherService teacherService;
         private readonly IStudentService studentService;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public AdminController(SchooldbContext context, ITeacherService teacherService, IStudentService studentService)
+        public AdminController(SchooldbContext context, ITeacherService teacherService, IStudentService studentService, UserManager<IdentityUser> userManager)
         {
             _context = context;
             this.teacherService = teacherService;
             this.studentService = studentService;
+            this.userManager = userManager;
         }
 
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult ListUsers()
+        {
+            List<IdentityUser> users = userManager.Users.ToList();
+            return View(users);
+        }
+
+        public IActionResult EditClaims(string id)
+        {
+            IdentityUser user = userManager.Users.FirstOrDefault(u => u.Id == id);
+            return View(user);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditClaims(string id, string role)
+        {
+            IdentityUser user = userManager.Users.FirstOrDefault(u => u.Id == id);
+            Claim newClaim = new Claim("Role", role);
+
+            Task<IList<Claim>> getClaimsTask = userManager.GetClaimsAsync(user);
+            IList<Claim> userClaims = await getClaimsTask;
+
+            Task<IdentityResult> removeClaimsTask = userManager.RemoveClaimsAsync(user, userClaims.Where(c => c.Type == "Role"));
+            await removeClaimsTask;
+
+            Task<IdentityResult> addClaimTask = userManager.AddClaimAsync(user, newClaim);
+            await addClaimTask;
+
+            return RedirectToAction("ListUsers");
         }
 
         public IActionResult AddStudent()
@@ -113,6 +149,19 @@ namespace ClassPage.Controllers
             teacherService.Delete(teacherId);
 
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> UnlinkEntity(string id)
+        {
+            IdentityUser user = userManager.Users.FirstOrDefault(u => u.Id == id);
+
+            Task<IList<Claim>> getClaimsTask = userManager.GetClaimsAsync(user);
+            IList<Claim> userClaims = await getClaimsTask;
+
+            Task<IdentityResult> removeClaimsTask = userManager.RemoveClaimsAsync(user, userClaims);
+            await removeClaimsTask;
+
+            return RedirectToAction("ListUsers");
         }
     }
 }
