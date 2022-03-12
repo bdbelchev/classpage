@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ClassPage.Models;
 using ClassPage.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClassPage
 {
@@ -41,6 +42,16 @@ namespace ClassPage
             services.AddScoped<ITeacherService, TeacherService>();
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IGradeService, GradeService>();
+
+            services.AddAuthorization(options =>
+            {
+                options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                options.AddPolicy("AdminOnly", policy => policy.RequireClaim("Role", "Admin"));
+                options.AddPolicy("StaffOnly", policy => policy.RequireClaim("Role", "Admin", "Teacher"));
+                options.AddPolicy("IsMemberOfSchool", policy => policy.RequireClaim("Role", "Student", "Teacher", "Admin"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
