@@ -1,4 +1,4 @@
-﻿@model Student
+﻿@model StudentDTO
 
 @{
     ViewData["Title"] = $"Student details - {Model.FirstName} {Model.LastName}";
@@ -19,7 +19,7 @@
 <p>
     Class:
     <b>
-        @Html.ActionLink(Model.Class.ClassName, "ClassDetails", "Directory", new { id = Model.ClassId })
+        @Html.ActionLink((ViewBag.ClassList as ICollection<Class>).FirstOrDefault(c => c.Id == Model.ClassId).ClassName, "ClassDetails", "Directory", new { id = Model.ClassId })
     </b>
 </p>
 

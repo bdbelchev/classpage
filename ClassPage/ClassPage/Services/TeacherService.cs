@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using ClassPage.Data;
 using ClassPage.Models;
 using ClassPage.Models.DTOs;
+using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal.Account.Manage;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClassPage.Services
 {
@@ -78,6 +80,38 @@ namespace ClassPage.Services
                 _context.Teachers.Remove(teacher);
                 _context.SaveChanges();
             }
+        }
+
+        public TeacherDTO GetById(int id)
+        {
+            Teacher teacher = _context.Teachers.Include(c => c.ClassesTeachers).Include(s => s.TeachersSubjects).Include(c => c.Class).FirstOrDefault(t => t.Id == id);
+
+            TeacherDTO teacherDto = new TeacherDTO();
+            teacherDto.Id = teacher.Id;
+            teacherDto.FirstName = teacher.FirstName;
+            teacherDto.MiddleName = teacher.MiddleName;
+            teacherDto.LastName = teacher.LastName;
+            teacherDto.Email = teacher.Email;
+            teacherDto.Phone = teacher.Phone;
+            teacherDto.ClassIds = teacher.ClassesTeachers.Select(c => c.ClassId).ToList();
+            teacherDto.SubjectIds = teacher.TeachersSubjects.Select(s => s.SubjectId).ToList();
+
+            if (teacher.Class != null)
+            {
+                teacherDto.MainClassId = teacher.Class.Id;
+            }
+
+            return teacherDto;
+        }
+
+        public List<TeacherDTO> GetAll()
+        {
+            List<Teacher> dbTeachers = _context.Teachers.Include(c => c.Class).Include(s => s.TeachersSubjects)
+                .ThenInclude(s => s.Subject).ToList();
+
+            List<TeacherDTO> teacherDTOs = dbTeachers.Select(t => GetById(t.Id)).ToList();
+
+            return teacherDTOs;
         }
 
         private Teacher toEntity(TeacherDTO teacherDTO)

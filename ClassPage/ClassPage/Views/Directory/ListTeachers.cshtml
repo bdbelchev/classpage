@@ -2,7 +2,7 @@
     ViewData["Title"] = "Teacher Directory";
 }
 
-@model List<Teacher>
+@model List<TeacherDTO>
 
 <h1>Teacher Directory</h1>
 <br />
@@ -18,13 +18,13 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (Teacher t in Model)
+        @foreach (TeacherDTO t in Model)
         {
             <tr>
                 <td>@t.FirstName</td>
                 <td>@t.MiddleName</td>
                 <td>@t.LastName</td>
-                <td>@string.Join(", ", t.TeachersSubjects.Select(ts => ts.Subject.SubjectName))</td>
+                <td>@string.Join(", ", (ViewBag.SubjectList as ICollection<Subject>).Where(s => t.SubjectIds.Contains(s.Id)).Select(s => s.SubjectName))</td>
                 <td>
                     @Html.ActionLink("Go", "TeacherDetails", "Directory", new { id = t.Id }, new { @class = "btn btn-primary" })
                 </td>

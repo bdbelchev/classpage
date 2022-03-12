@@ -68,11 +68,11 @@ namespace ClassPage.Controllers
 
         public IActionResult EditStudent(int id)
         {
-            Student student = _context.Students.Include(c => c.Class).First(s => s.Id == id);
-
             ViewBag.ClassList = _context.Classes.ToList();
 
-            return View(student);
+            StudentDTO studentDTO = studentService.GetById(id);
+
+            return View(studentDTO);
         }
 
         [HttpPost]
@@ -80,17 +80,17 @@ namespace ClassPage.Controllers
         {
             studentService.Edit(id, student);
 
-            return RedirectToAction("StudentDetails", "Directory", new { studentId = id });
+            return RedirectToAction("StudentDetails", "Directory", new { id });
         }
 
         public IActionResult EditTeacher(int id)
         {
-            Teacher teacher = _context.Teachers.Include(s => s.TeachersSubjects).ThenInclude(s => s.Subject).Include(c => c.ClassesTeachers).ThenInclude(c => c.Class).First(t => t.Id == id);
-
             ViewBag.ClassList = _context.Classes.ToList();
             ViewBag.SubjectList = _context.Subjects.ToList();
 
-            return View(teacher);
+            TeacherDTO teacherDTO = teacherService.GetById(id);
+
+            return View(teacherDTO);
         }
 
         [HttpPost]
@@ -98,7 +98,7 @@ namespace ClassPage.Controllers
         {
             teacherService.Edit(id, teacherDTO);
 
-            return RedirectToAction("TeacherDetails", "Directory", new { teacherId = id });
+            return RedirectToAction("TeacherDetails", "Directory", new { id });
         }
 
         public IActionResult DeleteStudent(int id)

@@ -2,7 +2,7 @@
     ViewData["Title"] = "Edit Teacher";
 }
 
-@model Teacher
+@model TeacherDTO
 
 <form asp-action="EditTeacher" asp-controller="Admin" asp-route-id="@Model.Id" method="post">
     <div class="form-group">
@@ -23,7 +23,7 @@
         @foreach (Subject s in ViewBag.SubjectList)
         {
             <div class="form-check form-check-inline">
-                @if (Model.TeachersSubjects.Any(ts => ts.SubjectId == s.Id))
+                @if (Model.SubjectIds.Any(ts => ts == s.Id))
                 {
                     <input class="form-check-input" type="checkbox" name="subjectIds" value="@s.Id" checked>
                 }
@@ -43,7 +43,7 @@
         @foreach (Class c in ViewBag.ClassList)
         {
             <div class="form-check form-check-inline">
-                @if (Model.ClassesTeachers.Any(ct => ct.ClassId == c.Id))
+                @if (Model.ClassIds.Any(ct => ct == c.Id))
                 {
                     <input class="form-check-input" type="checkbox" name="classIds" value="@c.Id" checked>
                 }

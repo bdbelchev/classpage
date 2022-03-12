@@ -2,35 +2,35 @@
     ViewData["Title"] = "Student Directory";
 }
 
-@model List<Student>
+@model List<StudentDTO>
 
 <h1>Student Directory</h1>
 <br />
 
 <table class="table">
     <thead>
-    <tr>
-        <th>First Name</th>
-        <th>Middle Name</th>
-        <th>Last Name</th>
-        <th>Class</th>
-        <th>Details</th>
-    </tr>
+        <tr>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+            <th>Class</th>
+            <th>Details</th>
+        </tr>
     </thead>
     <tbody>
-    @foreach (Student s in Model)
-    {
-        <tr>
-            <td>@s.FirstName</td>
-            <td>@s.MiddleName</td>
-            <td>@s.LastName</td>
-            <td>
-                @Html.ActionLink(s.Class.ClassName, "ClassDetails", "Directory", new { id = s.ClassId })
-            </td>
-            <td>
-                @Html.ActionLink("Go", $"StudentDetails", "Directory", new { id = s.Id }, new { @class = "btn btn-primary" })
-            </td>
-        </tr>
-    }
+        @foreach (StudentDTO s in Model)
+        {
+            <tr>
+                <td>@s.FirstName</td>
+                <td>@s.MiddleName</td>
+                <td>@s.LastName</td>
+                <td>
+                    @Html.ActionLink((ViewBag.ClassList as ICollection<Class>).FirstOrDefault(c => c.Id == s.ClassId).ClassName, "ClassDetails", "Directory", new { id = s.ClassId })
+                </td>
+                <td>
+                    @Html.ActionLink("Go", "StudentDetails", "Directory", new { id = s.Id }, new { @class = "btn btn-primary" })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
