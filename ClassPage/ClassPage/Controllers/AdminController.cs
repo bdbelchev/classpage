@@ -116,5 +116,6 @@ namespace ClassPage.Controllers
         }
 
         //TODO: Make and redirect to a "success" page instead.
+        //TODO: Add functionality for managing classes and subjects in the school.
     }
 }
