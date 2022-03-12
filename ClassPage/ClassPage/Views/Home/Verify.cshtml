@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Verify Account";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Verify Account</h1>
+    <p>To verify your account, please ensure that you have specified the <b>same</b> e-mail address that is in the school database.</p>
+    <p>After confirming, you will be logged out.</p>
+    <br />
+    <form asp-action="Verify" asp-controller="Home" method="post">
+        @if ((ViewBag.StudentList as ICollection<Student>).Select(s => s.Email).Contains(User.Identity.Name))
+        {
+            <p>
+                Found student:
+                @{
+                    Student student = (ViewBag.StudentList as ICollection<Student>
+                        ).FirstOrDefault(s => s.Email == User.Identity.Name);
+                    <b>@student.FirstName @student.LastName</b>
+                    <input type="hidden" name="role" value="Student" />
+                    <input type="hidden" name="entityId" value="@student.Id" />
+                }
+            </p>
+            <input type="submit" value="Confirm" class="btn btn-primary" />
+        }
+        else if ((ViewBag.TeacherList as ICollection<Teacher>).Select(t => t.Email).Contains(User.Identity.Name))
+        {
+            <p>
+                Found teacher:
+                @{
+                    Teacher teacher = (ViewBag.TeacherList as ICollection<Teacher>
+                        ).FirstOrDefault(s => s.Email == User.Identity.Name);
+                    <b>@teacher.FirstName @teacher.LastName</b>
+                    <input type="hidden" name="role" value="Teacher" />
+                    <input type="hidden" name="entityId" value="@teacher.Id" />
+                }
+            </p>
+            <input type="submit" value="Confirm" class="btn btn-primary" />
+        }
+        else
+        {
+            <p>No entries were found for this email address.</p>
+        }
+    </form>
+</div>
