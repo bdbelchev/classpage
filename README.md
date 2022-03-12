@@ -2,6 +2,7 @@
 Digital school diary which aims to facilitate communication between students, teachers and parents. Project for NP "IT Career" 2022.
 
 *Needs a MySQL database with [this](DatabaseStructure.sql) structure to function.*
+*Run `Update-Database` to add the ASP.NET Identity tables, required for accounts.*
 
 (Planned) features:
 
