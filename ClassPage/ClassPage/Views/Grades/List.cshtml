@@ -17,7 +17,10 @@ else
                 <th>Date</th>
                 <th>Teacher</th>
                 <th>Description</th>
-                <th></th>
+                @if (!User.HasClaim("Role", "Student"))
+                {
+                    <th></th>
+                }
             </tr>
         </thead>
         @foreach (Grade g in Model)
@@ -28,11 +31,14 @@ else
                 <td>@g.DateAdded.ToShortDateString()</td>
                 <td>@g.Teacher.FirstName @g.Teacher.LastName</td>
                 <td>@g.Description</td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", "Grades", new { gradeId = g.Id }, new { @class = "btn btn-warning" })
-                @Html.ActionLink("Delete", "Delete", "Grades", new { gradeId = g.Id }, new { @class = "btn btn-danger" })
-            </td>
-        </tr>
-    }
+                @if (User.HasClaim("Role", "Admin") || !User.HasClaim("Role", "Student") && g.TeacherId == int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value))
+                {
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "Grades", new { gradeId = g.Id }, new { @class = "btn btn-warning" })
+                        @Html.ActionLink("Delete", "Delete", "Grades", new { gradeId = g.Id }, new { @class = "btn btn-danger" })
+                    </td>
+                }
+            </tr>
+        }
     </table>
 }

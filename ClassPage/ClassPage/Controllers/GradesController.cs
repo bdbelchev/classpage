@@ -27,12 +27,14 @@ namespace ClassPage.Controllers
 
         public IActionResult Index()
         {
-            using (_context)
+            if (User.HasClaim("Role", "Student"))
             {
-                ViewBag.ClassList = _context.Classes.ToList();
-                ViewBag.StudentList = _context.Students.ToList();
-                ViewBag.TeacherList = _context.Teachers.ToList();
+                return RedirectToAction("List", new { studentId = int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value) });
             }
+
+            ViewBag.ClassList = _context.Classes.ToList();
+            ViewBag.StudentList = _context.Students.ToList();
+            ViewBag.TeacherList = _context.Teachers.ToList();
 
             return View();
         }
@@ -46,6 +48,11 @@ namespace ClassPage.Controllers
 
         public IActionResult List(int studentId)
         {
+            if (User.HasClaim("Role", "Student") && studentId != int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value))
+            {
+                return Redirect("/Identity/Account/AccessDenied");
+            }
+
             List<Grade> grades = _context.Grades.Include(g => g.Student).Include(g => g.Subject).Include(g => g.Teacher).Where(s => s.Student.Id == studentId).OrderByDescending(g => g.DateAdded).ToList();
 
             return View(grades);
@@ -54,8 +61,21 @@ namespace ClassPage.Controllers
         [Authorize(Policy = "StaffOnly")]
         public IActionResult Add(int teacherId)
         {
+            if (!User.HasClaim("Role", "Admin") && teacherId != int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value))
+            {
+                return Redirect("/Identity/Account/AccessDenied");
+            }
+
             Teacher teacher = _context.Teachers.Include(s => s.TeachersSubjects).ThenInclude(s => s.Subject)
                 .Include(s => s.ClassesTeachers).ThenInclude(s => s.Class).First(s => s.Id == teacherId);
+
+            if (User.HasClaim("Role", "Admin"))
+            {
+                ViewBag.ClassList = _context.Classes.ToList();
+                ViewBag.SubjectList = _context.Subjects.ToList();
+                ViewBag.TeacherList = _context.Teachers.ToList();
+            }
+
             return View(teacher);
         }
 
@@ -63,6 +83,11 @@ namespace ClassPage.Controllers
         [Authorize(Policy = "StaffOnly")]
         public IActionResult Add(GradeDTO gradeDto)
         {
+            if (!User.HasClaim("Role", "Admin"))
+            {
+                gradeDto.TeacherId = int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value);
+            }
+
             gradeService.Add(gradeDto);
 
             return RedirectToAction("List", new { gradeDto.StudentId });
@@ -73,6 +98,19 @@ namespace ClassPage.Controllers
         {
             Grade grade = _context.Grades.Include(s => s.Student).Include(t => t.Teacher).ThenInclude(s => s.TeachersSubjects).ThenInclude(s => s.Subject)
                 .Include(s => s.Teacher.ClassesTeachers).ThenInclude(s => s.Class).First(s => s.Id == gradeId);
+
+            if (!User.HasClaim("Role", "Admin") && grade.TeacherId != int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value))
+            {
+                return Redirect("/Identity/Account/AccessDenied");
+            }
+
+            if (User.HasClaim("Role", "Admin"))
+            {
+                ViewBag.ClassList = _context.Classes.ToList();
+                ViewBag.SubjectList = _context.Subjects.ToList();
+                ViewBag.TeacherList = _context.Teachers.ToList();
+            }
+
             return View(grade);
         }
 
@@ -80,6 +118,11 @@ namespace ClassPage.Controllers
         [Authorize(Policy = "StaffOnly")]
         public IActionResult Edit(int id, GradeDTO gradeDto)
         {
+            if (!User.HasClaim("Role", "Admin"))
+            {
+                gradeDto.TeacherId = int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value);
+            }
+
             gradeService.Edit(id, gradeDto);
 
             return RedirectToAction("List", new { gradeDto.StudentId });
@@ -88,6 +131,11 @@ namespace ClassPage.Controllers
         [Authorize(Policy = "StaffOnly")]
         public IActionResult Delete(int gradeId)
         {
+            if (!User.HasClaim("Role", "Admin") && _context.Grades.FirstOrDefault(g => g.Id == gradeId).TeacherId != int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value))
+            {
+                return Redirect("/Identity/Account/AccessDenied");
+            }
+
             gradeService.Delete(gradeId);
 
             return RedirectToAction("List", new { });

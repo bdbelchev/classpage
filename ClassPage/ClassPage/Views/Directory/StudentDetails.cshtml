@@ -30,8 +30,9 @@
     <p>E-mail address: <a href="mailto:@Model.Email">@Model.Email</a></p>
     <p>Telephone number: +359 @Model.Phone</p>
 </div>
-
-@Html.ActionLink("Go to grades", "List", "Grades", new { studentId = Model.Id }, new { @class = "btn btn-primary" })
+@if (!User.HasClaim("Role", "Student"))
+{
+    @Html.ActionLink("Go to grades", "List", "Grades", new { studentId = Model.Id }, new { @class = "btn btn-primary" })}
 <br />
 @if (User.HasClaim("Role", "Admin"))
 {

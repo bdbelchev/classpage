@@ -3,5 +3,49 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome!</h1>
+    @if (User.HasClaim("Role", "Student"))
+    {
+        <h1 class="display-4">Welcome, @((ViewBag.StudentList as ICollection<Student>).FirstOrDefault(s=>s.Id == int.Parse(User.Claims.FirstOrDefault(c => c.Type == "EntityID").Value)).FirstName)!</h1>
+        <ul>
+            <li>
+                @Html.ActionLink("View your grades", "Index", "Grades")
+            </li>
+            <li>
+                @Html.ActionLink("View school directory", "Index", "Directory")
+            </li>
+        </ul>
+    }
+    else if (User.HasClaim("Role", "Teacher"))
+    {
+        <h1 class="display-4">Welcome, Mr./Mrs. @((ViewBag.TeacherList as ICollection<Teacher>).FirstOrDefault(s=>s.Id == int.Parse(User.Claims.FirstOrDefault(c => c.Type == "EntityID").Value)).LastName)!</h1>
+        <ul>
+            <li>
+                @Html.ActionLink("Add new grades", "Add", "Grades", new { teacherId = int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value) })
+            </li>
+            <li>
+                @Html.ActionLink("Lookup student grades", "Index", "Grades")
+            </li>
+            <li>
+                @Html.ActionLink("View school directory", "Index", "Directory")
+            </li>
+        </ul>
+    }
+    else if (User.HasClaim("Role", "Admin"))
+    {
+        <h1 class="display-4">Welcome, Administrator!</h1>
+        <ul>
+            <li>
+                @Html.ActionLink("Add/remove students and teachers from school DB", "Index", "Admin")
+            </li>
+            <li>
+                @Html.ActionLink("Add new grades", "Add", "Grades", new { teacherId = 1 })
+            </li>
+            <li>
+                @Html.ActionLink("Lookup student grades", "Index", "Grades")
+            </li>
+            <li>
+                @Html.ActionLink("View and manage school directory", "Index", "Directory")
+            </li>
+        </ul>
+    }
 </div>

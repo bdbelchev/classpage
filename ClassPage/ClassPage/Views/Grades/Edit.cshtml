@@ -7,9 +7,25 @@
 <form asp-action="Edit" asp-controller="Grades" asp-route-id="@Model.Id" method="post">
     <div class="form-group">
         <label>Teacher</label>
-        <select class="form-control disabled" name="teacherId">
-            <option value="@Model.TeacherId">@Model.Teacher.FirstName @Model.Teacher.LastName</option>
-        </select>
+        @if (!User.HasClaim("Role", "Admin"))
+        {
+            <select class="form-control" disabled name="teacherId">
+                <option value="@Model.TeacherId">@Model.Teacher.FirstName @Model.Teacher.LastName</option>
+            </select>
+
+        }
+        else
+        {
+            <select class="form-control" name="teacherId">
+                <option disabled="disabled">Current teacher</option>
+                <option selected="selected" value="@Model.TeacherId">@Model.Teacher.FirstName @Model.Teacher.LastName</option>
+                <option disabled="disabled">Select teacher</option>
+                @foreach (Teacher teacher in ViewBag.TeacherList)
+                {
+                    <option value="@teacher.Id">@teacher.FirstName @teacher.LastName</option>
+                }
+            </select>
+        }
     </div>
     <div class="form-group">
         <label>Subject</label>
@@ -17,9 +33,19 @@
             <option disabled="disabled">Current subject</option>
             <option selected="selected" value="@Model.SubjectId">@Model.Subject.SubjectName</option>
             <option disabled="disabled">Select subject</option>
-            @foreach (TeachersSubject s in Model.Teacher.TeachersSubjects)
+            @if (!User.HasClaim("Role", "Admin"))
             {
-                <option value="@s.SubjectId">@s.Subject.SubjectName</option>
+                foreach (TeachersSubject s in Model.Teacher.TeachersSubjects)
+                {
+                    <option value="@s.SubjectId">@s.Subject.SubjectName</option>
+                }
+            }
+            else
+            {
+                foreach (Subject s in ViewBag.SubjectList)
+                {
+                    <option value="@s.Id">@s.SubjectName</option>
+                }
             }
         </select>
     </div>
@@ -29,9 +55,19 @@
             <option disabled="disabled">Current class</option>
             <option selected="selected" value="@Model.Student.ClassId">@Model.Student.Class.ClassName</option>
             <option disabled="disabled">Select class</option>
-            @foreach (ClassesTeacher s in Model.Teacher.ClassesTeachers)
+            @if (!User.HasClaim("Role", "Admin"))
             {
-                <option value="@s.ClassId">@s.Class.ClassName</option>
+                foreach (ClassesTeacher c in Model.Teacher.ClassesTeachers)
+                {
+                    <option value="@c.ClassId">@c.Class.ClassName</option>
+                }
+            }
+            else
+            {
+                foreach (Class c in ViewBag.ClassList)
+                {
+                    <option value="@c.Id">@c.ClassName</option>
+                }
             }
         </select>
     </div>

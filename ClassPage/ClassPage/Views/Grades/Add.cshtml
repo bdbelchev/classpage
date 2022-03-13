@@ -7,16 +7,40 @@
 <form asp-action="Add" asp-controller="Grades" method="post">
     <div class="form-group">
         <label>Teacher</label>
-        <select class="form-control disabled" name="teacherId">
-            <option value="@Model.Id">@Model.FirstName @Model.LastName</option>
-        </select>
+        @if (!User.HasClaim("Role", "Admin"))
+        {
+            <select class="form-control" disabled name="teacherId">
+                <option value="@Model.Id">@Model.FirstName @Model.LastName</option>
+            </select>
+
+        }
+        else
+        {
+            <select class="form-control" name="teacherId">
+                <option disabled="disabled" selected="selected">Select teacher</option>
+                @foreach (Teacher teacher in ViewBag.TeacherList)
+                {
+                    <option value="@teacher.Id">@teacher.FirstName @teacher.LastName</option>
+                }
+            </select>
+        }
     </div>
     <div class="form-group">
         <label>Subject</label>
         <select class="form-control" name="subjectId">
-            @foreach (TeachersSubject s in Model.TeachersSubjects)
+            @if (!User.HasClaim("Role", "Admin"))
             {
-                <option value="@s.SubjectId">@s.Subject.SubjectName</option>
+                foreach (TeachersSubject s in Model.TeachersSubjects)
+                {
+                    <option value="@s.SubjectId">@s.Subject.SubjectName</option>
+                }
+            }
+            else
+            {
+                foreach (Subject s in ViewBag.SubjectList)
+                {
+                    <option value="@s.Id">@s.SubjectName</option>
+                }
             }
         </select>
     </div>
@@ -24,9 +48,19 @@
         <label>Class</label>
         <select class="form-control" id="classId">
             <option disabled="disabled" selected="selected">Select class</option>
-            @foreach (ClassesTeacher s in Model.ClassesTeachers)
+            @if (!User.HasClaim("Role", "Admin"))
             {
-                <option value="@s.ClassId">@s.Class.ClassName</option>
+                foreach (ClassesTeacher c in Model.ClassesTeachers)
+                {
+                    <option value="@c.ClassId">@c.Class.ClassName</option>
+                }
+            }
+            else
+            {
+                foreach (Class c in ViewBag.ClassList)
+                {
+                    <option value="@c.Id">@c.ClassName</option>
+                }
             }
         </select>
     </div>

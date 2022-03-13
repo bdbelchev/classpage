@@ -47,12 +47,20 @@ namespace ClassPage.Controllers
 
         public IActionResult Welcome()
         {
+            ViewBag.StudentList = _context.Students.ToList();
+            ViewBag.TeacherList = _context.Teachers.ToList();
+
             return View();
         }
 
         public IActionResult Verify()
         {
             //TODO: Use DTOs from master
+
+            if (User.Claims.Any(c => c.Type == "EntityID"))
+            {
+                return RedirectToAction("Index");
+            }
 
             ViewBag.StudentList = _context.Students.ToList();
             ViewBag.TeacherList = _context.Teachers.ToList();
