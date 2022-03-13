@@ -24,21 +24,14 @@
 }
 <br />
 <h1>Add grade:</h1>
-@using (Html.BeginForm("Add", "Grades", FormMethod.Get))
+@if (User.HasClaim("Role", "Admin"))
 {
-    <div class="form-group">
-        <label>You are: (will be implemented using accounts later)</label>
-        <select name="teacherId" class="form-control">
-            <option disabled="disabled" selected="selected">Select teacher</option>
-            @foreach (Teacher t in ViewBag.TeacherList)
-            {
-                <option value="@t.Id">@t.FirstName @t.LastName</option>
-            }
-        </select>
-    </div>
-    <input type="submit" value="Go" class="btn btn-primary" />
+    @Html.ActionLink("Go", "Add", "Grades", new { teacherId = 1 }, new { @class = "btn btn-primary" })
 }
-
+else
+{
+    @Html.ActionLink("Go", "Add", "Grades", new { teacherId = int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value) }, new { @class = "btn btn-primary" })
+}
 <script type="text/javascript">
     $(document).ready(function() {
         $("#classId").on("change",

@@ -5,24 +5,85 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ClassPage.Data;
+using ClassPage.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace ClassPage.Controllers
 {
     public class HomeController : Controller
     {
         private readonly SchooldbContext _context;
+        private readonly IStudentService studentService;
+        private readonly ITeacherService teacherService;
+        private readonly UserManager<IdentityUser> userManager;
+        private readonly SignInManager<IdentityUser> signInManager;
 
-        public HomeController(SchooldbContext context)
+        public HomeController(SchooldbContext context, IStudentService studentService, ITeacherService teacherService, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             _context = context;
+            this.studentService = studentService;
+            this.teacherService = teacherService;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Welcome");
+            }
+
             return View();
+        }
+
+        public IActionResult Welcome()
+        {
+            ViewBag.StudentList = _context.Students.ToList();
+            ViewBag.TeacherList = _context.Teachers.ToList();
+
+            return View();
+        }
+
+        public IActionResult Verify()
+        {
+            //TODO: Use DTOs from master
+
+            if (User.Claims.Any(c => c.Type == "EntityID"))
+            {
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.StudentList = _context.Students.ToList();
+            ViewBag.TeacherList = _context.Teachers.ToList();
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Verify(string role, int entityId)
+        {
+            Task<IdentityUser> userTask = userManager.GetUserAsync(User);
+            IdentityUser user = await userTask;
+
+            Claim roleClaim = new Claim("Role", role);
+            Claim entityIdClaim = new Claim("EntityID", entityId.ToString());
+
+            Task<IdentityResult> addClaimsTask = userManager.AddClaimsAsync(user, new[] { roleClaim, entityIdClaim });
+            await addClaimsTask;
+
+            Task signoutTask = signInManager.SignOutAsync();
+            await signoutTask;
+
+            return RedirectToAction("Welcome");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -49,8 +49,10 @@
         </p>
     }
 </div>
-<div>
-    @Html.ActionLink("Edit teacher information", "EditTeacher", "Admin", new { id = Model.Id }, new { @class = "btn btn-warning" })
-    @Html.ActionLink("Delete teacher", "DeleteTeacher", "Admin", new { id = Model.Id }, new { @class = "btn btn-danger" })
-    <p>These buttons will be visible only to administrators, once account system is implemented.</p>
-</div>
+@if (User.HasClaim("Role", "Admin"))
+{
+    <div>
+        @Html.ActionLink("Edit teacher information", "EditTeacher", "Admin", new { id = Model.Id }, new { @class = "btn btn-warning" })
+        @Html.ActionLink("Delete teacher", "DeleteTeacher", "Admin", new { id = Model.Id }, new { @class = "btn btn-danger" })
+    </div>
+}

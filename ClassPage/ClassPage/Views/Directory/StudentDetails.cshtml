@@ -30,11 +30,14 @@
     <p>E-mail address: <a href="mailto:@Model.Email">@Model.Email</a></p>
     <p>Telephone number: +359 @Model.Phone</p>
 </div>
-
-@Html.ActionLink("Go to grades", "List", "Grades", new { studentId = Model.Id }, new { @class = "btn btn-primary" })
+@if (!User.HasClaim("Role", "Student"))
+{
+    @Html.ActionLink("Go to grades", "List", "Grades", new { studentId = Model.Id }, new { @class = "btn btn-primary" })}
 <br />
-<div>
-    @Html.ActionLink("Edit student information", "EditStudent", "Admin", new { id = Model.Id }, new { @class = "btn btn-warning" })
-    @Html.ActionLink("Delete student", "DeleteStudent", "Admin", new { id = Model.Id }, new { @class = "btn btn-danger" })
-    <p>These buttons will be visible only to administrators, once account system is implemented.</p>
-</div>
+@if (User.HasClaim("Role", "Admin"))
+{
+    <div>
+        @Html.ActionLink("Edit student information", "EditStudent", "Admin", new { id = Model.Id }, new { @class = "btn btn-warning" })
+        @Html.ActionLink("Delete student", "DeleteStudent", "Admin", new { id = Model.Id }, new { @class = "btn btn-danger" })
+    </div>
+}

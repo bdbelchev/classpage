@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "User List";
+}
+
+@using Microsoft.AspNetCore.Identity
+@model List<IdentityUser>
+@inject UserManager<IdentityUser> UserManager
+
+<h1>User List</h1>
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Entity</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (IdentityUser u in Model)
+        {
+            <tr>
+                <td>@u.Id</td>
+                <td>@u.Email</td>
+                <td>@UserManager.GetClaimsAsync(u).Result.FirstOrDefault(c => c.Type == "Role")?.Value</td>
+                <td>@UserManager.GetClaimsAsync(u).Result.FirstOrDefault(c => c.Type == "EntityID")?.Value</td>
+                <td>@Html.ActionLink("Edit claims", "EditClaims", "Admin", new { id = u.Id }, new { @class = "btn btn-primary" })</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,11 +1,12 @@
 ﻿using ClassPage.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
 namespace ClassPage.Data
 {
-    public partial class SchooldbContext : DbContext
+    public partial class SchooldbContext : IdentityDbContext
     {
         public SchooldbContext()
         {
@@ -256,6 +257,7 @@ namespace ClassPage.Data
             });
 
             OnModelCreatingPartial(modelBuilder);
+            base.OnModelCreating(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
