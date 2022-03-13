@@ -10,17 +10,17 @@ else
     StudentDTO currentStudent = (ViewBag.StudentList as ICollection<StudentDTO>).Single(t => t.Id == Model.First().StudentId);
     ViewData["Title"] = $"{currentStudent.FirstName}'s grades";
     <h1>Grades for: @currentStudent.FirstName</h1>
-    <table class="table">
+    <table class="table table-hover">
         <thead>
             <tr>
-                <th>Subject</th>
-                <th>Grade</th>
-                <th>Date</th>
-                <th>Teacher</th>
-                <th>Description</th>
+                <th scope="col">Subject</th>
+                <th scope="col">Grade</th>
+                <th scope="col">Date</th>
+                <th scope="col">Teacher</th>
+                <th scope="col">Description</th>
                 @if (!User.HasClaim("Role", "Student"))
                 {
-                    <th></th>
+                    <th scope="col"></th>
                 }
             </tr>
         </thead>
