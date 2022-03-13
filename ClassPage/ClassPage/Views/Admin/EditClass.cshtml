@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Edit Class";
+}
+
+@model ClassDTO
+
+<form asp-action="EditClass" asp-controller="Admin" asp-route-id="@Model.Id" method="post">
+    <div class="form-group">
+        <label>Class Name</label>
+        <input type="text" class="form-control" name="className" value="@Model.ClassName" required />
+        <label>Maximum 3 characters, in format {year}{letter}</label>
+    </div>
+    <div class="form-group">
+        <select class="form-control" name="mainTeacherId">
+            <option disabled="disabled">Current teacher</option>
+            @{
+                TeacherDTO currentTeacher = (ViewBag.TeacherList as ICollection<TeacherDTO>).Single(t => t.Id == Model.MainTeacherId);
+                <option selected="selected" value="@Model.MainTeacherId">@currentTeacher.FirstName @currentTeacher.LastName</option>
+            }
+            <option disabled="disabled">Select teacher</option>
+            @foreach (TeacherDTO teacher in ViewBag.TeacherList)
+            {
+                <option value="@teacher.Id">@teacher.FirstName @teacher.LastName</option>
+            }
+        </select>
+    </div>
+    <input type="submit" value="Go" class="btn btn-primary" />
+</form>

@@ -138,6 +138,84 @@ namespace ClassPage.Controllers
             return RedirectToAction("ListTeachers", "Directory");
         }
 
+        public IActionResult ManageSubjects()
+        {
+            List<SubjectDTO> subjects = subjectService.GetAll();
+            return View(subjects);
+        }
+
+        public IActionResult AddSubject()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddSubject(SubjectDTO subject)
+        {
+            subjectService.Add(subject);
+            return RedirectToAction("ManageSubjects");
+        }
+
+        public IActionResult EditSubject(int id)
+        {
+            SubjectDTO subject = subjectService.GetById(id);
+            return View(subject);
+        }
+
+        [HttpPost]
+        public IActionResult EditSubject(int id, SubjectDTO subject)
+        {
+            subjectService.Edit(id, subject);
+            return RedirectToAction("ManageSubjects");
+        }
+
+        public IActionResult DeleteSubject(int id)
+        {
+            subjectService.Delete(id);
+            return RedirectToAction("ManageSubjects");
+        }
+
+        public IActionResult ManageClasses()
+        {
+            List<ClassDTO> classes = classService.GetAll();
+            return View(classes);
+        }
+
+        public IActionResult AddClass()
+        {
+            ViewBag.TeacherList = teacherService.GetAll();
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddClass(ClassDTO classDTO)
+        {
+            classService.Add(classDTO);
+            return RedirectToAction("ManageClasses");
+        }
+
+        public IActionResult EditClass(int id)
+        {
+            ClassDTO classDTO = classService.GetById(id);
+
+            ViewBag.TeacherList = teacherService.GetAll();
+
+            return View(classDTO);
+        }
+
+        [HttpPost]
+        public IActionResult EditClass(int id, ClassDTO classDTO)
+        {
+            classService.Edit(id, classDTO);
+            return RedirectToAction("ManageClasses");
+        }
+
+        public IActionResult DeleteClass(int id)
+        {
+            classService.Delete(id);
+            return RedirectToAction("ManageClasses");
+        }
+
         public async Task<IActionResult> UnlinkEntity(string id)
         {
             IdentityUser user = userManager.Users.FirstOrDefault(u => u.Id == id);
@@ -150,8 +228,5 @@ namespace ClassPage.Controllers
 
             return RedirectToAction("ListUsers");
         }
-
-        //TODO: Make and redirect to a "success" page instead.
-        //TODO: Add functionality for managing classes and subjects in the school.
     }
 }

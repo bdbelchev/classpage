@@ -52,8 +52,6 @@ namespace ClassPage.Controllers
 
         public IActionResult Verify()
         {
-            //TODO: Use DTOs from master
-
             if (User.Claims.Any(c => c.Type == "EntityID"))
             {
                 return RedirectToAction("Index");

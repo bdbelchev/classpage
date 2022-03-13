@@ -40,6 +40,8 @@ namespace ClassPage.Services
         {
             Subject subject = _context.Subjects.FirstOrDefault(s => s.Id == id);
 
+            _context.TeachersSubjects.RemoveRange(_context.TeachersSubjects.Where(ts => ts.SubjectId == id));
+
             _context.Subjects.Remove(subject);
             _context.SaveChanges();
         }

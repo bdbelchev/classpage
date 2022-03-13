@@ -40,6 +40,12 @@ namespace ClassPage.Services
         {
             Class dbClass = _context.Classes.FirstOrDefault(s => s.Id == id);
 
+            _context.ClassesTeachers.RemoveRange(_context.ClassesTeachers.Where(t => t.ClassId == id));
+
+            List<Student> delStudents = _context.Students.Where(t => t.ClassId == id).ToList();
+            _context.Grades.RemoveRange(_context.Grades.Where(t => delStudents.Select(s => s.Id).Contains(t.StudentId)));
+            _context.Students.RemoveRange(delStudents);
+
             _context.Classes.Remove(dbClass);
             _context.SaveChanges();
         }
