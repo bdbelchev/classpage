@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ClassPage.Data;
 using ClassPage.Models;
 using ClassPage.Models.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClassPage.Services
 {
@@ -49,6 +50,31 @@ namespace ClassPage.Services
 
             _context.Students.Remove(student);
             _context.SaveChanges();
+        }
+
+        public StudentDTO GetById(int id)
+        {
+            Student student = _context.Students.FirstOrDefault(s => s.Id == id);
+
+            StudentDTO studentDTO = new StudentDTO();
+            studentDTO.Id = student.Id;
+            studentDTO.FirstName = student.FirstName;
+            studentDTO.MiddleName = student.MiddleName;
+            studentDTO.LastName = student.LastName;
+            studentDTO.ClassId = student.ClassId;
+            studentDTO.Email = student.Email;
+            studentDTO.Phone = student.Phone;
+
+            return studentDTO;
+        }
+
+        public List<StudentDTO> GetAll()
+        {
+            List<Student> dbStudents = _context.Students.Include(c => c.Class).ToList();
+
+            List<StudentDTO> studentDTOs = dbStudents.Select(t => GetById(t.Id)).ToList();
+
+            return studentDTOs;
         }
 
         private Student toEntity(StudentDTO studentDTO)

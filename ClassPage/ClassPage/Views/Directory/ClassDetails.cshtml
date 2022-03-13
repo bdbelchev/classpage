@@ -9,7 +9,7 @@
 
 <p>
     <b>Main teacher:</b>
-    <b>@Html.ActionLink($"{Model.MainTeacher.FirstName} {Model.MainTeacher.LastName}", "TeacherDetails", "Directory", new { teacherId = Model.MainTeacherId })</b>
+    <b>@Html.ActionLink($"{Model.MainTeacher.FirstName} {Model.MainTeacher.LastName}", "TeacherDetails", "Directory", new { id = Model.MainTeacherId })</b>
 </p>
 
 <div>
@@ -18,7 +18,7 @@
     @foreach (Student s in Model.Students)
     {
         <p>
-            @Html.ActionLink($"{s.FirstName} {s.LastName}", "StudentDetails", "Directory", new { studentId = s.Id })
+            @Html.ActionLink($"{s.FirstName} {s.LastName}", "StudentDetails", "Directory", new { id = s.Id })
         </p>
     }
 </div>
@@ -29,7 +29,7 @@
     @foreach (ClassesTeacher s in Model.ClassesTeachers)
     {
         <p>
-            @Html.ActionLink($"{s.Teacher.FirstName} {s.Teacher.LastName}", "TeacherDetails", "Directory", new { teacherId = s.TeacherId }) - @string.Join(", ", s.Teacher.TeachersSubjects.Select(ts => ts.Subject.SubjectName))
+            @Html.ActionLink($"{s.Teacher.FirstName} {s.Teacher.LastName}", "TeacherDetails", "Directory", new { id = s.TeacherId }) - @string.Join(", ", s.Teacher.TeachersSubjects.Select(ts => ts.Subject.SubjectName))
         </p>
     }
 </div>

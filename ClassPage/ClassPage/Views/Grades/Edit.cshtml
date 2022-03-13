@@ -2,7 +2,7 @@
     ViewData["Title"] = "Edit grade";
 }
 
-@model Grade
+@model GradeDTO
 
 <form asp-action="Edit" asp-controller="Grades" asp-route-id="@Model.Id" method="post">
     <div class="form-group">
@@ -10,7 +10,10 @@
         @if (!User.HasClaim("Role", "Admin"))
         {
             <select class="form-control" disabled name="teacherId">
-                <option value="@Model.TeacherId">@Model.Teacher.FirstName @Model.Teacher.LastName</option>
+                @{
+                    TeacherDTO teacher = (ViewBag.TeacherList as ICollection<TeacherDTO>).Single(t => t.Id == Model.TeacherId);
+                    <option value="@Model.TeacherId">@teacher.FirstName @teacher.LastName</option>
+                }
             </select>
 
         }
@@ -18,9 +21,12 @@
         {
             <select class="form-control" name="teacherId">
                 <option disabled="disabled">Current teacher</option>
-                <option selected="selected" value="@Model.TeacherId">@Model.Teacher.FirstName @Model.Teacher.LastName</option>
+                @{
+                    TeacherDTO currentTeacher = (ViewBag.TeacherList as ICollection<TeacherDTO>).Single(t => t.Id == Model.TeacherId);
+                    <option selected="selected" value="@Model.TeacherId">@currentTeacher.FirstName @currentTeacher.LastName</option>
+                }
                 <option disabled="disabled">Select teacher</option>
-                @foreach (Teacher teacher in ViewBag.TeacherList)
+                @foreach (TeacherDTO teacher in ViewBag.TeacherList)
                 {
                     <option value="@teacher.Id">@teacher.FirstName @teacher.LastName</option>
                 }
@@ -31,13 +37,13 @@
         <label>Subject</label>
         <select class="form-control" name="subjectId">
             <option disabled="disabled">Current subject</option>
-            <option selected="selected" value="@Model.SubjectId">@Model.Subject.SubjectName</option>
+            <option selected="selected" value="@Model.SubjectId">@((ViewBag.SubjectList as ICollection<Subject>).Single(s=>s.Id==Model.SubjectId).SubjectName)</option>
             <option disabled="disabled">Select subject</option>
             @if (!User.HasClaim("Role", "Admin"))
             {
-                foreach (TeachersSubject s in Model.Teacher.TeachersSubjects)
+                foreach (int id in (ViewBag.TeacherList as ICollection<TeacherDTO>).Single(t => t.Id == Model.TeacherId).SubjectIds)
                 {
-                    <option value="@s.SubjectId">@s.Subject.SubjectName</option>
+                    <option value="@id">@((ViewBag.SubjectList as ICollection<Subject>).Single(s => s.Id == id).SubjectName)</option>
                 }
             }
             else
@@ -53,13 +59,17 @@
         <label>Class</label>
         <select class="form-control" id="classId">
             <option disabled="disabled">Current class</option>
-            <option selected="selected" value="@Model.Student.ClassId">@Model.Student.Class.ClassName</option>
+            @{
+                StudentDTO currentSelectedStudent = (ViewBag.StudentList as ICollection<StudentDTO>).Single(t => t.Id == Model.StudentId);
+                Class currentClass = (ViewBag.ClassList as ICollection<Class>).Single(t => t.Id == currentSelectedStudent.ClassId);
+                <option selected="selected" value="@currentSelectedStudent.ClassId">@currentClass.ClassName</option>
+            }
             <option disabled="disabled">Select class</option>
             @if (!User.HasClaim("Role", "Admin"))
             {
-                foreach (ClassesTeacher c in Model.Teacher.ClassesTeachers)
+                foreach (int id in (ViewBag.TeacherList as ICollection<TeacherDTO>).Single(t => t.Id == Model.TeacherId).ClassIds)
                 {
-                    <option value="@c.ClassId">@c.Class.ClassName</option>
+                    <option value="@id">@((ViewBag.ClassList as ICollection<Class>).Single(s => s.Id == id).ClassName)</option>
                 }
             }
             else
@@ -75,13 +85,24 @@
         <label>Student</label>
         <select id="studentId" name="studentId" class="form-control" required>
             <option disabled="disabled">Current student</option>
-            <option selected="selected" value="@Model.StudentId">@Model.Student.FirstName @Model.Student.LastName</option>
+            @{
+                StudentDTO currentStudent = (ViewBag.StudentList as ICollection<StudentDTO>).Single(t => t.Id == Model.StudentId);
+                <option selected="selected" value="@Model.StudentId">@currentStudent.FirstName @currentStudent.LastName</option>
+            }
             <option disabled="disabled">Select new class to populate student list</option>
         </select>
     </div>
     <div class="form-group">
         <label>Grade</label>
-        <input type="number" class="form-control" name="value" value="@Model.Value" />
+        <select name="value" class="form-control" required>
+            <option disabled="disabled">Current grade</option>
+            <option selected="selected" value="@Model.Value">@Model.Value</option>
+            <option disabled="disabled">Select grade</option>
+            @for (int i = 2; i <= 6; i++)
+            {
+                <option value="@i">@i</option>
+            }
+        </select>
     </div>
     <div class="form-group">
         <label>Date</label>

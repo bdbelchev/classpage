@@ -18,11 +18,15 @@ namespace ClassPage.Controllers
     {
         private readonly SchooldbContext _context;
         private readonly IGradeService gradeService;
+        private readonly ITeacherService teacherService;
+        private readonly IStudentService studentService;
 
-        public GradesController(SchooldbContext context, IGradeService gradeService)
+        public GradesController(SchooldbContext context, IGradeService gradeService, ITeacherService teacherService, IStudentService studentService)
         {
             _context = context;
             this.gradeService = gradeService;
+            this.teacherService = teacherService;
+            this.studentService = studentService;
         }
 
         public IActionResult Index()
@@ -53,7 +57,11 @@ namespace ClassPage.Controllers
                 return Redirect("/Identity/Account/AccessDenied");
             }
 
-            List<Grade> grades = _context.Grades.Include(g => g.Student).Include(g => g.Subject).Include(g => g.Teacher).Where(s => s.Student.Id == studentId).OrderByDescending(g => g.DateAdded).ToList();
+            List<GradeDTO> grades = gradeService.GetAll().Where(s => s.StudentId == studentId).OrderByDescending(g => g.DateAdded).ToList();
+
+            ViewBag.StudentList = studentService.GetAll();
+            ViewBag.TeacherList = teacherService.GetAll();
+            ViewBag.SubjectList = _context.Subjects.ToList();
 
             return View(grades);
         }
@@ -66,15 +74,12 @@ namespace ClassPage.Controllers
                 return Redirect("/Identity/Account/AccessDenied");
             }
 
-            Teacher teacher = _context.Teachers.Include(s => s.TeachersSubjects).ThenInclude(s => s.Subject)
-                .Include(s => s.ClassesTeachers).ThenInclude(s => s.Class).First(s => s.Id == teacherId);
+            TeacherDTO teacher = teacherService.GetById(teacherId);
 
-            if (User.HasClaim("Role", "Admin"))
-            {
-                ViewBag.ClassList = _context.Classes.ToList();
-                ViewBag.SubjectList = _context.Subjects.ToList();
-                ViewBag.TeacherList = _context.Teachers.ToList();
-            }
+            ViewBag.TeacherList = teacherService.GetAll();
+            ViewBag.StudentList = studentService.GetAll();
+            ViewBag.ClassList = _context.Classes.ToList();
+            ViewBag.SubjectList = _context.Subjects.ToList();
 
             return View(teacher);
         }
@@ -96,20 +101,17 @@ namespace ClassPage.Controllers
         [Authorize(Policy = "StaffOnly")]
         public IActionResult Edit(int gradeId)
         {
-            Grade grade = _context.Grades.Include(s => s.Student).Include(t => t.Teacher).ThenInclude(s => s.TeachersSubjects).ThenInclude(s => s.Subject)
-                .Include(s => s.Teacher.ClassesTeachers).ThenInclude(s => s.Class).First(s => s.Id == gradeId);
+            GradeDTO grade = gradeService.GetById(gradeId);
 
             if (!User.HasClaim("Role", "Admin") && grade.TeacherId != int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value))
             {
                 return Redirect("/Identity/Account/AccessDenied");
             }
 
-            if (User.HasClaim("Role", "Admin"))
-            {
-                ViewBag.ClassList = _context.Classes.ToList();
-                ViewBag.SubjectList = _context.Subjects.ToList();
-                ViewBag.TeacherList = _context.Teachers.ToList();
-            }
+            ViewBag.StudentList = studentService.GetAll();
+            ViewBag.TeacherList = teacherService.GetAll();
+            ViewBag.ClassList = _context.Classes.ToList();
+            ViewBag.SubjectList = _context.Subjects.ToList();
 
             return View(grade);
         }
@@ -136,9 +138,10 @@ namespace ClassPage.Controllers
                 return Redirect("/Identity/Account/AccessDenied");
             }
 
+            int studentId = gradeService.GetById(gradeId).StudentId;
             gradeService.Delete(gradeId);
 
-            return RedirectToAction("List", new { });
+            return RedirectToAction("List", new { studentId });
         }
     }
 }

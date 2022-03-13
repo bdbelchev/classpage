@@ -1,4 +1,5 @@
-﻿using ClassPage.Models.DTOs;
+﻿using System.Collections.Generic;
+using ClassPage.Models.DTOs;
 
 namespace ClassPage.Services
 {
@@ -7,5 +8,7 @@ namespace ClassPage.Services
         void Add(TeacherDTO teacherDTO);
         void Edit(int id, TeacherDTO teacher);
         void Delete(int id);
+        TeacherDTO GetById(int id);
+        List<TeacherDTO> GetAll();
     }
 }

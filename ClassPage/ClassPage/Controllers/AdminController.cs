@@ -67,11 +67,7 @@ namespace ClassPage.Controllers
 
         public IActionResult AddStudent()
         {
-            using (_context)
-            {
-                ViewBag.ClassList = _context.Classes.ToList();
-            }
-
+            ViewBag.ClassList = _context.Classes.ToList();
             return View();
         }
 
@@ -79,18 +75,13 @@ namespace ClassPage.Controllers
         public IActionResult AddStudent(StudentDTO student)
         {
             studentService.Add(student);
-
-            return RedirectToAction("Index");
+            return RedirectToAction("ListStudents", "Directory");
         }
 
         public IActionResult AddTeacher()
         {
-            using (_context)
-            {
-                ViewBag.ClassList = _context.Classes.ToList();
-                ViewBag.SubjectList = _context.Subjects.ToList();
-            }
-
+            ViewBag.ClassList = _context.Classes.ToList();
+            ViewBag.SubjectList = _context.Subjects.ToList();
             return View();
         }
 
@@ -98,57 +89,52 @@ namespace ClassPage.Controllers
         public IActionResult AddTeacher(TeacherDTO teacher)
         {
             teacherService.Add(teacher);
-
-            return RedirectToAction("Index");
+            return RedirectToAction("ListTeachers", "Directory");
         }
 
-        public IActionResult EditStudent(int studentId)
+        public IActionResult EditStudent(int id)
         {
-            Student student = _context.Students.Include(c => c.Class).First(s => s.Id == studentId);
-
             ViewBag.ClassList = _context.Classes.ToList();
 
-            return View(student);
+            StudentDTO studentDTO = studentService.GetById(id);
+
+            return View(studentDTO);
         }
 
         [HttpPost]
         public IActionResult EditStudent(int id, StudentDTO student)
         {
             studentService.Edit(id, student);
-
-            return RedirectToAction("Index");
+            return RedirectToAction("StudentDetails", "Directory", new { id });
         }
 
-        public IActionResult EditTeacher(int teacherId)
+        public IActionResult EditTeacher(int id)
         {
-            Teacher teacher = _context.Teachers.Include(s => s.TeachersSubjects).ThenInclude(s => s.Subject).Include(c => c.ClassesTeachers).ThenInclude(c => c.Class).First(t => t.Id == teacherId);
-
             ViewBag.ClassList = _context.Classes.ToList();
             ViewBag.SubjectList = _context.Subjects.ToList();
 
-            return View(teacher);
+            TeacherDTO teacherDTO = teacherService.GetById(id);
+
+            return View(teacherDTO);
         }
 
         [HttpPost]
         public IActionResult EditTeacher(int id, TeacherDTO teacherDTO)
         {
             teacherService.Edit(id, teacherDTO);
-
-            return RedirectToAction("Index");
+            return RedirectToAction("TeacherDetails", "Directory", new { id });
         }
 
-        public IActionResult DeleteStudent(int studentId)
+        public IActionResult DeleteStudent(int id)
         {
-            studentService.Delete(studentId);
-
-            return RedirectToAction("Index");
+            studentService.Delete(id);
+            return RedirectToAction("ListStudents", "Directory");
         }
 
-        public IActionResult DeleteTeacher(int teacherId)
+        public IActionResult DeleteTeacher(int id)
         {
-            teacherService.Delete(teacherId);
-
-            return RedirectToAction("Index");
+            teacherService.Delete(id);
+            return RedirectToAction("ListTeachers", "Directory");
         }
 
         public async Task<IActionResult> UnlinkEntity(string id)
@@ -163,5 +149,8 @@ namespace ClassPage.Controllers
 
             return RedirectToAction("ListUsers");
         }
+
+        //TODO: Make and redirect to a "success" page instead.
+        //TODO: Add functionality for managing classes and subjects in the school.
     }
 }

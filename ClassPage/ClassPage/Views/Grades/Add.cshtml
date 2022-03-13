@@ -2,7 +2,7 @@
     ViewData["Title"] = "Add grade";
 }
 
-@model Teacher
+@model TeacherDTO
 
 <form asp-action="Add" asp-controller="Grades" method="post">
     <div class="form-group">
@@ -18,7 +18,7 @@
         {
             <select class="form-control" name="teacherId">
                 <option disabled="disabled" selected="selected">Select teacher</option>
-                @foreach (Teacher teacher in ViewBag.TeacherList)
+                @foreach (TeacherDTO teacher in ViewBag.TeacherList)
                 {
                     <option value="@teacher.Id">@teacher.FirstName @teacher.LastName</option>
                 }
@@ -28,11 +28,12 @@
     <div class="form-group">
         <label>Subject</label>
         <select class="form-control" name="subjectId">
+            <option disabled="disabled" selected="selected">Select subject</option>
             @if (!User.HasClaim("Role", "Admin"))
             {
-                foreach (TeachersSubject s in Model.TeachersSubjects)
+                foreach (int id in Model.SubjectIds)
                 {
-                    <option value="@s.SubjectId">@s.Subject.SubjectName</option>
+                    <option value="@id">@((ViewBag.SubjectList as ICollection<Subject>).Single(s => s.Id == id).SubjectName)</option>
                 }
             }
             else
@@ -50,9 +51,9 @@
             <option disabled="disabled" selected="selected">Select class</option>
             @if (!User.HasClaim("Role", "Admin"))
             {
-                foreach (ClassesTeacher c in Model.ClassesTeachers)
+                foreach (int id in Model.ClassIds)
                 {
-                    <option value="@c.ClassId">@c.Class.ClassName</option>
+                    <option value="@id">@((ViewBag.ClassList as ICollection<Class>).Single(c => c.Id == id).ClassName)</option>
                 }
             }
             else

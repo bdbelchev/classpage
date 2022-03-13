@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using ClassPage.Data;
 using ClassPage.Models;
+using ClassPage.Models.DTOs;
+using ClassPage.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,10 +16,14 @@ namespace ClassPage.Controllers
     public class DirectoryController : Controller
     {
         private readonly SchooldbContext _context;
+        private readonly ITeacherService teacherService;
+        private readonly IStudentService studentService;
 
-        public DirectoryController(SchooldbContext context)
+        public DirectoryController(SchooldbContext context, ITeacherService teacherService, IStudentService studentService)
         {
             _context = context;
+            this.teacherService = teacherService;
+            this.studentService = studentService;
         }
 
         public IActionResult Index()
@@ -28,35 +34,41 @@ namespace ClassPage.Controllers
 
         public IActionResult ListTeachers()
         {
-            List<Teacher> teachers = _context.Teachers.Include(c => c.Class).Include(s => s.TeachersSubjects).ThenInclude(s => s.Subject).ToList();
+            List<TeacherDTO> teachers = teacherService.GetAll();
+            ViewBag.SubjectList = _context.Subjects.ToList();
 
             return View(teachers);
         }
 
         public IActionResult ListStudents()
         {
-            List<Student> students = _context.Students.Include(c => c.Class).ToList();
+            List<StudentDTO> students = studentService.GetAll();
+            ViewBag.ClassList = _context.Classes.ToList();
 
             return View(students);
         }
 
-        public IActionResult TeacherDetails(int teacherId)
+        public IActionResult TeacherDetails(int id)
         {
-            Teacher teacher = _context.Teachers.Include(c => c.Class).Include(c => c.ClassesTeachers).ThenInclude(c => c.Class).Include(s => s.TeachersSubjects).ThenInclude(s => s.Subject).FirstOrDefault(t => t.Id == teacherId);
+            TeacherDTO teacher = teacherService.GetById(id);
+
+            ViewBag.ClassList = _context.Classes.ToList();
+            ViewBag.SubjectList = _context.Subjects.ToList();
 
             return View(teacher);
         }
 
-        public IActionResult StudentDetails(int studentId)
+        public IActionResult StudentDetails(int id)
         {
-            Student student = _context.Students.Include(c => c.Class).FirstOrDefault(s => s.Id == studentId);
+            StudentDTO student = studentService.GetById(id);
+            ViewBag.ClassList = _context.Classes.ToList();
 
             return View(student);
         }
 
-        public IActionResult ClassDetails(int classId)
+        public IActionResult ClassDetails(int id)
         {
-            Class schoolClass = _context.Classes.Include(c => c.MainTeacher).Include(s => s.Students).Include(t => t.ClassesTeachers).ThenInclude(t => t.Teacher).ThenInclude(s => s.TeachersSubjects).ThenInclude(s => s.Subject).FirstOrDefault(c => c.Id == classId);
+            Class schoolClass = _context.Classes.Include(c => c.MainTeacher).Include(s => s.Students).Include(t => t.ClassesTeachers).ThenInclude(t => t.Teacher).ThenInclude(s => s.TeachersSubjects).ThenInclude(s => s.Subject).FirstOrDefault(c => c.Id == id);
 
             return View(schoolClass);
         }
