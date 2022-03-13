@@ -22,11 +22,8 @@ namespace ClassPage.Services
         {
             Student student = toEntity(studentDTO);
 
-            using (_context)
-            {
-                _context.Students.Add(student);
-                _context.SaveChanges();
-            }
+            _context.Students.Add(student);
+            _context.SaveChanges();
         }
 
         public void Edit(int id, StudentDTO studentDTO)

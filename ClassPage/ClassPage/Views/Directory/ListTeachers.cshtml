@@ -24,7 +24,7 @@
                 <td>@t.FirstName</td>
                 <td>@t.MiddleName</td>
                 <td>@t.LastName</td>
-                <td>@string.Join(", ", (ViewBag.SubjectList as ICollection<Subject>).Where(s => t.SubjectIds.Contains(s.Id)).Select(s => s.SubjectName))</td>
+                <td>@string.Join(", ", (ViewBag.SubjectList as ICollection<SubjectDTO>).Where(s => t.SubjectIds.Contains(s.Id)).Select(s => s.SubjectName))</td>
                 <td>
                     @Html.ActionLink("Go", "TeacherDetails", "Directory", new { id = t.Id }, new { @class = "btn btn-primary" })
                 </td>

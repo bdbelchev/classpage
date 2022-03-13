@@ -42,6 +42,8 @@ namespace ClassPage
             services.AddScoped<ITeacherService, TeacherService>();
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IGradeService, GradeService>();
+            services.AddScoped<ISubjectService, SubjectService>();
+            services.AddScoped<IClassService, ClassService>();
 
             services.AddAuthorization(options =>
             {

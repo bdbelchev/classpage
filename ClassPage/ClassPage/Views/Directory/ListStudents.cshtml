@@ -25,7 +25,7 @@
                 <td>@s.MiddleName</td>
                 <td>@s.LastName</td>
                 <td>
-                    @Html.ActionLink((ViewBag.ClassList as ICollection<Class>).FirstOrDefault(c => c.Id == s.ClassId).ClassName, "ClassDetails", "Directory", new { id = s.ClassId })
+                    @Html.ActionLink((ViewBag.ClassList as ICollection<ClassDTO>).FirstOrDefault(c => c.Id == s.ClassId).ClassName, "ClassDetails", "Directory", new { id = s.ClassId })
                 </td>
                 <td>
                     @Html.ActionLink("Go", "StudentDetails", "Directory", new { id = s.Id }, new { @class = "btn btn-primary" })

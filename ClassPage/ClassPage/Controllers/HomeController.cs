@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ClassPage.Data;
 using ClassPage.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,15 +18,13 @@ namespace ClassPage.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly SchooldbContext _context;
         private readonly IStudentService studentService;
         private readonly ITeacherService teacherService;
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
 
-        public HomeController(SchooldbContext context, IStudentService studentService, ITeacherService teacherService, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public HomeController(IStudentService studentService, ITeacherService teacherService, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
-            _context = context;
             this.studentService = studentService;
             this.teacherService = teacherService;
             this.userManager = userManager;
@@ -47,8 +44,8 @@ namespace ClassPage.Controllers
 
         public IActionResult Welcome()
         {
-            ViewBag.StudentList = _context.Students.ToList();
-            ViewBag.TeacherList = _context.Teachers.ToList();
+            ViewBag.StudentList = studentService.GetAll();
+            ViewBag.TeacherList = teacherService.GetAll();
 
             return View();
         }
@@ -62,8 +59,8 @@ namespace ClassPage.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.StudentList = _context.Students.ToList();
-            ViewBag.TeacherList = _context.Teachers.ToList();
+            ViewBag.StudentList = studentService.GetAll();
+            ViewBag.TeacherList = teacherService.GetAll();
 
             return View();
         }

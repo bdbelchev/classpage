@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ClassPage.Data;
 using ClassPage.Models;
 using ClassPage.Models.DTOs;
 using ClassPage.Services;
@@ -16,17 +15,19 @@ namespace ClassPage.Controllers
     [Authorize(Policy = "IsMemberOfSchool")]
     public class GradesController : Controller
     {
-        private readonly SchooldbContext _context;
         private readonly IGradeService gradeService;
         private readonly ITeacherService teacherService;
         private readonly IStudentService studentService;
+        private readonly ISubjectService subjectService;
+        private readonly IClassService classService;
 
-        public GradesController(SchooldbContext context, IGradeService gradeService, ITeacherService teacherService, IStudentService studentService)
+        public GradesController(IGradeService gradeService, ITeacherService teacherService, IStudentService studentService, ISubjectService subjectService, IClassService classService)
         {
-            _context = context;
             this.gradeService = gradeService;
             this.teacherService = teacherService;
             this.studentService = studentService;
+            this.subjectService = subjectService;
+            this.classService = classService;
         }
 
         public IActionResult Index()
@@ -36,16 +37,16 @@ namespace ClassPage.Controllers
                 return RedirectToAction("List", new { studentId = int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value) });
             }
 
-            ViewBag.ClassList = _context.Classes.ToList();
-            ViewBag.StudentList = _context.Students.ToList();
-            ViewBag.TeacherList = _context.Teachers.ToList();
+            ViewBag.ClassList = classService.GetAll();
+            ViewBag.StudentList = studentService.GetAll();
+            ViewBag.TeacherList = teacherService.GetAll();
 
             return View();
         }
 
         public JsonResult GetStudentsDropdown(int classId)
         {
-            List<SelectListItem> students = _context.Students.Where(s => s.ClassId == classId).Select(s => new SelectListItem(s.FirstName + " " + s.LastName, s.Id.ToString())).ToList();
+            List<SelectListItem> students = studentService.GetAll().Where(s => s.ClassId == classId).Select(s => new SelectListItem(s.FirstName + " " + s.LastName, s.Id.ToString())).ToList();
 
             return Json(new { students });
         }
@@ -61,7 +62,7 @@ namespace ClassPage.Controllers
 
             ViewBag.StudentList = studentService.GetAll();
             ViewBag.TeacherList = teacherService.GetAll();
-            ViewBag.SubjectList = _context.Subjects.ToList();
+            ViewBag.SubjectList = subjectService.GetAll();
 
             return View(grades);
         }
@@ -78,8 +79,8 @@ namespace ClassPage.Controllers
 
             ViewBag.TeacherList = teacherService.GetAll();
             ViewBag.StudentList = studentService.GetAll();
-            ViewBag.ClassList = _context.Classes.ToList();
-            ViewBag.SubjectList = _context.Subjects.ToList();
+            ViewBag.ClassList = classService.GetAll();
+            ViewBag.SubjectList = subjectService.GetAll();
 
             return View(teacher);
         }
@@ -110,8 +111,8 @@ namespace ClassPage.Controllers
 
             ViewBag.StudentList = studentService.GetAll();
             ViewBag.TeacherList = teacherService.GetAll();
-            ViewBag.ClassList = _context.Classes.ToList();
-            ViewBag.SubjectList = _context.Subjects.ToList();
+            ViewBag.ClassList = classService.GetAll();
+            ViewBag.SubjectList = subjectService.GetAll();
 
             return View(grade);
         }
@@ -133,7 +134,7 @@ namespace ClassPage.Controllers
         [Authorize(Policy = "StaffOnly")]
         public IActionResult Delete(int gradeId)
         {
-            if (!User.HasClaim("Role", "Admin") && _context.Grades.FirstOrDefault(g => g.Id == gradeId).TeacherId != int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value))
+            if (!User.HasClaim("Role", "Admin") && gradeService.GetById(gradeId).TeacherId != int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value))
             {
                 return Redirect("/Identity/Account/AccessDenied");
             }
@@ -143,5 +144,7 @@ namespace ClassPage.Controllers
 
             return RedirectToAction("List", new { studentId });
         }
+
+        //TODO: Grades should be doubles, add validation (2.00 to 6.00)
     }
 }

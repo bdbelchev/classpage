@@ -21,9 +21,9 @@
         <label>Class</label>
         <select class="form-control" name="classId">
             <option disabled="disabled">Current class</option>
-            <option selected="selected" value="@Model.ClassId">@((ViewBag.ClassList as ICollection<Class>).FirstOrDefault(c => c.Id == Model.ClassId).ClassName)</option>
+            <option selected="selected" value="@Model.ClassId">@((ViewBag.ClassList as ICollection<ClassDTO>).FirstOrDefault(c => c.Id == Model.ClassId).ClassName)</option>
             <option disabled="disabled">Select class</option>
-            @foreach (Class c in ViewBag.ClassList)
+            @foreach (ClassDTO c in ViewBag.ClassList)
             {
                 <option value="@c.Id">@c.ClassName</option>
             }

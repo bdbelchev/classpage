@@ -27,7 +27,7 @@ else
         @foreach (GradeDTO g in Model)
         {
             <tr>
-                <td>@((ViewBag.SubjectList as ICollection<Subject>).Single(s=>s.Id==g.SubjectId).SubjectName)</td>
+                <td>@((ViewBag.SubjectList as ICollection<SubjectDTO>).Single(s=>s.Id==g.SubjectId).SubjectName)</td>
                 <td>@g.Value</td>
                 <td>@g.DateAdded.ToShortDateString()</td>
                 @{

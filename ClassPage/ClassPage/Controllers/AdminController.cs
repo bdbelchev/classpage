@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ClassPage.Data;
 using ClassPage.Models;
 using ClassPage.Models.DTOs;
 using ClassPage.Services;
@@ -17,16 +16,18 @@ namespace ClassPage.Controllers
     [Authorize(Policy = "AdminOnly")]
     public class AdminController : Controller
     {
-        private readonly SchooldbContext _context;
         private readonly ITeacherService teacherService;
         private readonly IStudentService studentService;
+        private readonly ISubjectService subjectService;
+        private readonly IClassService classService;
         private readonly UserManager<IdentityUser> userManager;
 
-        public AdminController(SchooldbContext context, ITeacherService teacherService, IStudentService studentService, UserManager<IdentityUser> userManager)
+        public AdminController(ITeacherService teacherService, IStudentService studentService, ISubjectService subjectService, IClassService classService, UserManager<IdentityUser> userManager)
         {
-            _context = context;
             this.teacherService = teacherService;
             this.studentService = studentService;
+            this.subjectService = subjectService;
+            this.classService = classService;
             this.userManager = userManager;
         }
 
@@ -67,7 +68,7 @@ namespace ClassPage.Controllers
 
         public IActionResult AddStudent()
         {
-            ViewBag.ClassList = _context.Classes.ToList();
+            ViewBag.ClassList = classService.GetAll();
             return View();
         }
 
@@ -80,8 +81,8 @@ namespace ClassPage.Controllers
 
         public IActionResult AddTeacher()
         {
-            ViewBag.ClassList = _context.Classes.ToList();
-            ViewBag.SubjectList = _context.Subjects.ToList();
+            ViewBag.ClassList = classService.GetAll();
+            ViewBag.SubjectList = subjectService.GetAll();
             return View();
         }
 
@@ -94,7 +95,7 @@ namespace ClassPage.Controllers
 
         public IActionResult EditStudent(int id)
         {
-            ViewBag.ClassList = _context.Classes.ToList();
+            ViewBag.ClassList = classService.GetAll();
 
             StudentDTO studentDTO = studentService.GetById(id);
 
@@ -110,8 +111,8 @@ namespace ClassPage.Controllers
 
         public IActionResult EditTeacher(int id)
         {
-            ViewBag.ClassList = _context.Classes.ToList();
-            ViewBag.SubjectList = _context.Subjects.ToList();
+            ViewBag.ClassList = classService.GetAll();
+            ViewBag.SubjectList = subjectService.GetAll();
 
             TeacherDTO teacherDTO = teacherService.GetById(id);
 
