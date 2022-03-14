@@ -42,6 +42,15 @@ else
                         @Html.ActionLink("Delete", "Delete", "Grades", new { gradeId = g.Id }, new { @class = "btn btn-danger" })
                     </td>
                 }
+                else if (User.HasClaim("Role", "Teacher"))
+                {
+                    <td>
+                        <button disabled class="btn btn-warning">Edit</button>
+                        <button disabled class="btn btn-danger">Delete</button>
+                        <br />
+                        <label>(Not your grade)</label>
+                    </td>
+                }
             </tr>
         }
     </table>
