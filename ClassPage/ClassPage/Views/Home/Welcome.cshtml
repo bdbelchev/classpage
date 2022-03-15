@@ -48,4 +48,11 @@
             </li>
         </ul>
     }
+    else
+    {
+        <h1 class="display-4">Hello!</h1>
+        <p>Thank you for registering.</p>
+        <p>Your account is not yet verified to correspond to a member of our school. To use the full functionality of the site, please verify your account.</p>
+        @Html.ActionLink("Verify", "Verify", "Home", null, new { @class = "btn btn-primary" });
+    }
 </div>
