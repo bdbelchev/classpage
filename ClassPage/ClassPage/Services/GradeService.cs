@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ClassPage.Data;
 using ClassPage.Models;
 using ClassPage.Models.DTOs;
-using Microsoft.EntityFrameworkCore;
 
 namespace ClassPage.Services
 {

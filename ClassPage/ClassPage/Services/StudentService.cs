@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ClassPage.Data;
 using ClassPage.Models;
 using ClassPage.Models.DTOs;
@@ -22,11 +20,8 @@ namespace ClassPage.Services
         {
             Student student = toEntity(studentDTO);
 
-            using (_context)
-            {
-                _context.Students.Add(student);
-                _context.SaveChanges();
-            }
+            _context.Students.Add(student);
+            _context.SaveChanges();
         }
 
         public void Edit(int id, StudentDTO studentDTO)

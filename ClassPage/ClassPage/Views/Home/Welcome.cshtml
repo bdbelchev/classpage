@@ -5,7 +5,7 @@
 <div class="text-center">
     @if (User.HasClaim("Role", "Student"))
     {
-        <h1 class="display-4">Welcome, @((ViewBag.StudentList as ICollection<Student>).FirstOrDefault(s=>s.Id == int.Parse(User.Claims.FirstOrDefault(c => c.Type == "EntityID").Value)).FirstName)!</h1>
+        <h1 class="display-4">Welcome, @((ViewBag.StudentList as ICollection<StudentDTO>).FirstOrDefault(s=>s.Id == int.Parse(User.Claims.FirstOrDefault(c => c.Type == "EntityID").Value)).FirstName)!</h1>
         <ul>
             <li>
                 @Html.ActionLink("View your grades", "Index", "Grades")
@@ -17,7 +17,7 @@
     }
     else if (User.HasClaim("Role", "Teacher"))
     {
-        <h1 class="display-4">Welcome, Mr./Mrs. @((ViewBag.TeacherList as ICollection<Teacher>).FirstOrDefault(s=>s.Id == int.Parse(User.Claims.FirstOrDefault(c => c.Type == "EntityID").Value)).LastName)!</h1>
+        <h1 class="display-4">Welcome, Mr./Mrs. @((ViewBag.TeacherList as ICollection<TeacherDTO>).FirstOrDefault(s=>s.Id == int.Parse(User.Claims.FirstOrDefault(c => c.Type == "EntityID").Value)).LastName)!</h1>
         <ul>
             <li>
                 @Html.ActionLink("Add new grades", "Add", "Grades", new { teacherId = int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value) })
@@ -47,5 +47,12 @@
                 @Html.ActionLink("View and manage school directory", "Index", "Directory")
             </li>
         </ul>
+    }
+    else
+    {
+        <h1 class="display-4">Hello!</h1>
+        <p>Thank you for registering.</p>
+        <p>Your account is not yet verified to correspond to a member of our school. To use the full functionality of the site, please verify your account.</p>
+        @Html.ActionLink("Verify", "Verify", "Home", null, new { @class = "btn btn-primary" });
     }
 </div>

@@ -1,0 +1,30 @@
+﻿@model List<ClassDTO>
+
+@Html.ActionLink("Add new class", "AddClass", "Admin", null, new { @class = "btn btn-primary" })
+
+<br />
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Class</th>
+            <th scope="col">Operations</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ClassDTO c in Model.OrderBy(s => s.Id))
+        {
+            <tr>
+                <td>@c.Id</td>
+                <td>@c.ClassName</td>
+                <td>
+                    @Html.ActionLink("Edit", "EditClass", "Admin", new { id = c.Id }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Delete", "DeleteClass", "Admin", new { id = c.Id }, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h1 class="text-danger">Warning: if you delete a class, all students in the selected class will also be deleted!</h1>
+<h2 class="text-danger">To be used with caution, for example if all students have graduated/been removed.</h2>

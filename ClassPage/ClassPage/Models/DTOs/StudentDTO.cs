@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ClassPage.Models.DTOs
+﻿namespace ClassPage.Models.DTOs
 {
     public class StudentDTO
     {

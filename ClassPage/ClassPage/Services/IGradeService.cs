@@ -5,8 +5,8 @@ namespace ClassPage.Services
 {
     public interface IGradeService
     {
-        void Add(GradeDTO gradeDto);
-        void Edit(int id, GradeDTO gradeDto);
+        void Add(GradeDTO gradeDTO);
+        void Edit(int id, GradeDTO gradeDTO);
         void Delete(int id);
         List<GradeDTO> GetAll();
         GradeDTO GetById(int id);

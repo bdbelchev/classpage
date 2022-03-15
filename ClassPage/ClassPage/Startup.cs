@@ -1,18 +1,11 @@
 using ClassPage.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ClassPage.Models;
 using ClassPage.Services;
 using Microsoft.AspNetCore.Authorization;
 
@@ -42,6 +35,8 @@ namespace ClassPage
             services.AddScoped<ITeacherService, TeacherService>();
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IGradeService, GradeService>();
+            services.AddScoped<ISubjectService, SubjectService>();
+            services.AddScoped<IClassService, ClassService>();
 
             services.AddAuthorization(options =>
             {

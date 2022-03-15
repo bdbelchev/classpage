@@ -33,12 +33,12 @@
             {
                 foreach (int id in Model.SubjectIds)
                 {
-                    <option value="@id">@((ViewBag.SubjectList as ICollection<Subject>).Single(s => s.Id == id).SubjectName)</option>
+                    <option value="@id">@((ViewBag.SubjectList as ICollection<SubjectDTO>).Single(s => s.Id == id).SubjectName)</option>
                 }
             }
             else
             {
-                foreach (Subject s in ViewBag.SubjectList)
+                foreach (SubjectDTO s in ViewBag.SubjectList)
                 {
                     <option value="@s.Id">@s.SubjectName</option>
                 }
@@ -53,12 +53,12 @@
             {
                 foreach (int id in Model.ClassIds)
                 {
-                    <option value="@id">@((ViewBag.ClassList as ICollection<Class>).Single(c => c.Id == id).ClassName)</option>
+                    <option value="@id">@((ViewBag.ClassList as ICollection<ClassDTO>).Single(c => c.Id == id).ClassName)</option>
                 }
             }
             else
             {
-                foreach (Class c in ViewBag.ClassList)
+                foreach (ClassDTO c in ViewBag.ClassList)
                 {
                     <option value="@c.Id">@c.ClassName</option>
                 }

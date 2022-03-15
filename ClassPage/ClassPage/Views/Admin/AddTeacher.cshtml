@@ -18,7 +18,7 @@
     <div class="form-group">
         <label>Subjects</label>
         <br />
-        @foreach (Subject s in ViewBag.SubjectList)
+        @foreach (SubjectDTO s in ViewBag.SubjectList)
         {
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" name="subjectIds" value="@s.Id">
@@ -31,7 +31,7 @@
     <div class="form-group">
         <label>Classes</label>
         <br />
-        @foreach (Class c in ViewBag.ClassList)
+        @foreach (ClassDTO c in ViewBag.ClassList)
         {
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" name="classIds" value="@c.Id">

@@ -1,33 +1,24 @@
 ﻿using ClassPage.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ClassPage.Data;
 using ClassPage.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace ClassPage.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly SchooldbContext _context;
         private readonly IStudentService studentService;
         private readonly ITeacherService teacherService;
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
 
-        public HomeController(SchooldbContext context, IStudentService studentService, ITeacherService teacherService, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public HomeController(IStudentService studentService, ITeacherService teacherService, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
-            _context = context;
             this.studentService = studentService;
             this.teacherService = teacherService;
             this.userManager = userManager;
@@ -47,23 +38,21 @@ namespace ClassPage.Controllers
 
         public IActionResult Welcome()
         {
-            ViewBag.StudentList = _context.Students.ToList();
-            ViewBag.TeacherList = _context.Teachers.ToList();
+            ViewBag.StudentList = studentService.GetAll();
+            ViewBag.TeacherList = teacherService.GetAll();
 
             return View();
         }
 
         public IActionResult Verify()
         {
-            //TODO: Use DTOs from master
-
             if (User.Claims.Any(c => c.Type == "EntityID"))
             {
                 return RedirectToAction("Index");
             }
 
-            ViewBag.StudentList = _context.Students.ToList();
-            ViewBag.TeacherList = _context.Teachers.ToList();
+            ViewBag.StudentList = studentService.GetAll();
+            ViewBag.TeacherList = teacherService.GetAll();
 
             return View();
         }

@@ -1,4 +1,4 @@
-﻿@model Class
+﻿@model ClassDTO
 
 @{
     ViewData["Title"] = "Class details - " + Model.ClassName;
@@ -9,13 +9,16 @@
 
 <p>
     <b>Main teacher:</b>
-    <b>@Html.ActionLink($"{Model.MainTeacher.FirstName} {Model.MainTeacher.LastName}", "TeacherDetails", "Directory", new { id = Model.MainTeacherId })</b>
+    @{
+        TeacherDTO mainTeacher = (ViewBag.TeacherList as ICollection<TeacherDTO>).FirstOrDefault(t => t.Id == Model.MainTeacherId);
+        <b>@Html.ActionLink($"{mainTeacher.FirstName} {mainTeacher.LastName}", "TeacherDetails", "Directory", new { id = Model.MainTeacherId })</b>
+    }
 </p>
 
 <div>
     <b>Students:</b>
 
-    @foreach (Student s in Model.Students)
+    @foreach (StudentDTO s in (ViewBag.StudentList as ICollection<StudentDTO>).Where(s => s.ClassId == Model.Id))
     {
         <p>
             @Html.ActionLink($"{s.FirstName} {s.LastName}", "StudentDetails", "Directory", new { id = s.Id })
@@ -26,10 +29,10 @@
 <div>
     <b>Teachers:</b>
 
-    @foreach (ClassesTeacher s in Model.ClassesTeachers)
+    @foreach (TeacherDTO t in (ViewBag.TeacherList as ICollection<TeacherDTO>).Where(t => t.ClassIds.Contains(Model.Id)))
     {
         <p>
-            @Html.ActionLink($"{s.Teacher.FirstName} {s.Teacher.LastName}", "TeacherDetails", "Directory", new { id = s.TeacherId }) - @string.Join(", ", s.Teacher.TeachersSubjects.Select(ts => ts.Subject.SubjectName))
+            @Html.ActionLink($"{t.FirstName} {t.LastName}", "TeacherDetails", "Directory", new { id = t.Id }) - @string.Join(", ", (ViewBag.SubjectList as ICollection<SubjectDTO>).Where(s => t.SubjectIds.Contains(s.Id)).Select(s => s.SubjectName))
         </p>
     }
 </div>

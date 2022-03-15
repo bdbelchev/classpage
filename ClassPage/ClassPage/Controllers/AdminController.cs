@@ -1,32 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ClassPage.Data;
-using ClassPage.Models;
 using ClassPage.Models.DTOs;
 using ClassPage.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace ClassPage.Controllers
 {
     [Authorize(Policy = "AdminOnly")]
     public class AdminController : Controller
     {
-        private readonly SchooldbContext _context;
         private readonly ITeacherService teacherService;
         private readonly IStudentService studentService;
+        private readonly ISubjectService subjectService;
+        private readonly IClassService classService;
         private readonly UserManager<IdentityUser> userManager;
 
-        public AdminController(SchooldbContext context, ITeacherService teacherService, IStudentService studentService, UserManager<IdentityUser> userManager)
+        public AdminController(ITeacherService teacherService, IStudentService studentService, ISubjectService subjectService, IClassService classService, UserManager<IdentityUser> userManager)
         {
-            _context = context;
             this.teacherService = teacherService;
             this.studentService = studentService;
+            this.subjectService = subjectService;
+            this.classService = classService;
             this.userManager = userManager;
         }
 
@@ -67,7 +65,7 @@ namespace ClassPage.Controllers
 
         public IActionResult AddStudent()
         {
-            ViewBag.ClassList = _context.Classes.ToList();
+            ViewBag.ClassList = classService.GetAll();
             return View();
         }
 
@@ -80,8 +78,8 @@ namespace ClassPage.Controllers
 
         public IActionResult AddTeacher()
         {
-            ViewBag.ClassList = _context.Classes.ToList();
-            ViewBag.SubjectList = _context.Subjects.ToList();
+            ViewBag.ClassList = classService.GetAll();
+            ViewBag.SubjectList = subjectService.GetAll();
             return View();
         }
 
@@ -94,7 +92,7 @@ namespace ClassPage.Controllers
 
         public IActionResult EditStudent(int id)
         {
-            ViewBag.ClassList = _context.Classes.ToList();
+            ViewBag.ClassList = classService.GetAll();
 
             StudentDTO studentDTO = studentService.GetById(id);
 
@@ -110,8 +108,8 @@ namespace ClassPage.Controllers
 
         public IActionResult EditTeacher(int id)
         {
-            ViewBag.ClassList = _context.Classes.ToList();
-            ViewBag.SubjectList = _context.Subjects.ToList();
+            ViewBag.ClassList = classService.GetAll();
+            ViewBag.SubjectList = subjectService.GetAll();
 
             TeacherDTO teacherDTO = teacherService.GetById(id);
 
@@ -137,6 +135,84 @@ namespace ClassPage.Controllers
             return RedirectToAction("ListTeachers", "Directory");
         }
 
+        public IActionResult ManageSubjects()
+        {
+            List<SubjectDTO> subjects = subjectService.GetAll();
+            return View(subjects);
+        }
+
+        public IActionResult AddSubject()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddSubject(SubjectDTO subject)
+        {
+            subjectService.Add(subject);
+            return RedirectToAction("ManageSubjects");
+        }
+
+        public IActionResult EditSubject(int id)
+        {
+            SubjectDTO subject = subjectService.GetById(id);
+            return View(subject);
+        }
+
+        [HttpPost]
+        public IActionResult EditSubject(int id, SubjectDTO subject)
+        {
+            subjectService.Edit(id, subject);
+            return RedirectToAction("ManageSubjects");
+        }
+
+        public IActionResult DeleteSubject(int id)
+        {
+            subjectService.Delete(id);
+            return RedirectToAction("ManageSubjects");
+        }
+
+        public IActionResult ManageClasses()
+        {
+            List<ClassDTO> classes = classService.GetAll();
+            return View(classes);
+        }
+
+        public IActionResult AddClass()
+        {
+            ViewBag.TeacherList = teacherService.GetAll();
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddClass(ClassDTO classDTO)
+        {
+            classService.Add(classDTO);
+            return RedirectToAction("ManageClasses");
+        }
+
+        public IActionResult EditClass(int id)
+        {
+            ClassDTO classDTO = classService.GetById(id);
+
+            ViewBag.TeacherList = teacherService.GetAll();
+
+            return View(classDTO);
+        }
+
+        [HttpPost]
+        public IActionResult EditClass(int id, ClassDTO classDTO)
+        {
+            classService.Edit(id, classDTO);
+            return RedirectToAction("ManageClasses");
+        }
+
+        public IActionResult DeleteClass(int id)
+        {
+            classService.Delete(id);
+            return RedirectToAction("ManageClasses");
+        }
+
         public async Task<IActionResult> UnlinkEntity(string id)
         {
             IdentityUser user = userManager.Users.FirstOrDefault(u => u.Id == id);
@@ -149,8 +225,5 @@ namespace ClassPage.Controllers
 
             return RedirectToAction("ListUsers");
         }
-
-        //TODO: Make and redirect to a "success" page instead.
-        //TODO: Add functionality for managing classes and subjects in the school.
     }
 }

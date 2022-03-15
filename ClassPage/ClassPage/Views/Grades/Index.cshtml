@@ -9,7 +9,7 @@
     <div class="form-group">
         <select id="classId" class="form-control">
             <option disabled="disabled" selected="selected">Select class</option>
-            @foreach (Class c in ViewBag.ClassList)
+            @foreach (ClassDTO c in ViewBag.ClassList)
             {
                 <option value="@c.Id">@c.ClassName</option>
             }
