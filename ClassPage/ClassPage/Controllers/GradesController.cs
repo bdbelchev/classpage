@@ -140,7 +140,5 @@ namespace ClassPage.Controllers
 
             return RedirectToAction("List", new { studentId });
         }
-
-        //TODO: Grades should be doubles, add validation (2.00 to 6.00)
     }
 }

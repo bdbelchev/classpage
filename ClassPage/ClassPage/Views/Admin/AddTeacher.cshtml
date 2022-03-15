@@ -5,15 +5,15 @@
 <form asp-action="AddTeacher" asp-controller="Admin" method="post">
     <div class="form-group">
         <label>First Name</label>
-        <input type="text" class="form-control" name="firstName" required />
+        <input type="text" class="form-control text-capitalize" name="firstName" required />
     </div>
     <div class="form-group">
         <label>Middle Name</label>
-        <input type="text" class="form-control" name="middleName" />
+        <input type="text" class="form-control text-capitalize" name="middleName" />
     </div>
     <div class="form-group">
         <label>Last Name</label>
-        <input type="text" class="form-control" name="lastName" required />
+        <input type="text" class="form-control text-capitalize" name="lastName" required />
     </div>
     <div class="form-group">
         <label>Subjects</label>
@@ -46,8 +46,8 @@
         <input name="email" class="form-control" type="email" required />
     </div>
     <div class="form-group">
-        <label>Telephone number</label>
-        <input name="phone" class="form-control" type="tel" />
+        <label>Telephone number (without +359 or 0)</label>
+        <input name="phone" class="form-control" type="tel" pattern="[0-9]{9}" />
     </div>
     <input type="submit" value="Go" class="btn btn-primary" />
 </form>
