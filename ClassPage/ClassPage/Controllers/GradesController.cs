@@ -85,14 +85,19 @@ namespace ClassPage.Controllers
         [Authorize(Policy = "StaffOnly")]
         public IActionResult Add(GradeDTO gradeDto)
         {
-            if (!User.HasClaim("Role", "Admin"))
+            if (ModelState.IsValid)
             {
-                gradeDto.TeacherId = int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value);
+
+                if (!User.HasClaim("Role", "Admin"))
+                {
+                    gradeDto.TeacherId = int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value);
+                }
+
+                gradeService.Add(gradeDto);
+                return RedirectToAction("List", new { gradeDto.StudentId });
             }
 
-            gradeService.Add(gradeDto);
-
-            return RedirectToAction("List", new { gradeDto.StudentId });
+            return RedirectToAction("Error", "Home");
         }
 
         [Authorize(Policy = "StaffOnly")]
@@ -117,14 +122,19 @@ namespace ClassPage.Controllers
         [Authorize(Policy = "StaffOnly")]
         public IActionResult Edit(int id, GradeDTO gradeDto)
         {
-            if (!User.HasClaim("Role", "Admin"))
+            if (ModelState.IsValid)
             {
-                gradeDto.TeacherId = int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value);
+                if (!User.HasClaim("Role", "Admin"))
+                {
+                    gradeDto.TeacherId = int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value);
+                }
+
+                gradeService.Edit(id, gradeDto);
+
+                return RedirectToAction("List", new { gradeDto.StudentId });
             }
 
-            gradeService.Edit(id, gradeDto);
-
-            return RedirectToAction("List", new { gradeDto.StudentId });
+            return RedirectToAction("Error", "Home");
         }
 
         [Authorize(Policy = "StaffOnly")]
@@ -140,7 +150,5 @@ namespace ClassPage.Controllers
 
             return RedirectToAction("List", new { studentId });
         }
-
-        //TODO: Grades should be doubles, add validation (2.00 to 6.00)
     }
 }

@@ -9,7 +9,7 @@
         <label>Teacher</label>
         @if (!User.HasClaim("Role", "Admin"))
         {
-            <select class="form-control" disabled name="teacherId">
+            <select class="form-control" disabled name="teacherId" required>
                 @{
                     TeacherDTO teacher = (ViewBag.TeacherList as ICollection<TeacherDTO>).Single(t => t.Id == Model.TeacherId);
                     <option value="@Model.TeacherId">@teacher.FirstName @teacher.LastName</option>
@@ -19,7 +19,7 @@
         }
         else
         {
-            <select class="form-control" name="teacherId">
+            <select class="form-control" name="teacherId" required>
                 <option disabled="disabled">Current teacher</option>
                 @{
                     TeacherDTO currentTeacher = (ViewBag.TeacherList as ICollection<TeacherDTO>).Single(t => t.Id == Model.TeacherId);
@@ -35,7 +35,7 @@
     </div>
     <div class="form-group">
         <label>Subject</label>
-        <select class="form-control" name="subjectId">
+        <select class="form-control" name="subjectId" required>
             <option disabled="disabled">Current subject</option>
             <option selected="selected" value="@Model.SubjectId">@((ViewBag.SubjectList as ICollection<SubjectDTO>).Single(s=>s.Id==Model.SubjectId).SubjectName)</option>
             <option disabled="disabled">Select subject</option>
@@ -57,7 +57,7 @@
     </div>
     <div class="form-group">
         <label>Class</label>
-        <select class="form-control" id="classId">
+        <select class="form-control" id="classId" required>
             <option disabled="disabled">Current class</option>
             @{
                 StudentDTO currentSelectedStudent = (ViewBag.StudentList as ICollection<StudentDTO>).Single(t => t.Id == Model.StudentId);
@@ -94,15 +94,7 @@
     </div>
     <div class="form-group">
         <label>Grade</label>
-        <select name="value" class="form-control" required>
-            <option disabled="disabled">Current grade</option>
-            <option selected="selected" value="@Model.Value">@Model.Value</option>
-            <option disabled="disabled">Select grade</option>
-            @for (int i = 2; i <= 6; i++)
-            {
-                <option value="@i">@i</option>
-            }
-        </select>
+        <input type="number" name="value" value="@Model.Value" class="form-control" required min="2" max="6" step="0.01" />
     </div>
     <div class="form-group">
         <label>Date</label>

@@ -72,8 +72,13 @@ namespace ClassPage.Controllers
         [HttpPost]
         public IActionResult AddStudent(StudentDTO student)
         {
-            studentService.Add(student);
-            return RedirectToAction("ListStudents", "Directory");
+            if (ModelState.IsValid)
+            {
+                studentService.Add(student);
+                return RedirectToAction("ListStudents", "Directory");
+            }
+
+            return RedirectToAction("Error", "Home");
         }
 
         public IActionResult AddTeacher()
@@ -86,8 +91,13 @@ namespace ClassPage.Controllers
         [HttpPost]
         public IActionResult AddTeacher(TeacherDTO teacher)
         {
-            teacherService.Add(teacher);
-            return RedirectToAction("ListTeachers", "Directory");
+            if (ModelState.IsValid)
+            {
+                teacherService.Add(teacher);
+                return RedirectToAction("ListTeachers", "Directory");
+            }
+
+            return RedirectToAction("Error", "Home");
         }
 
         public IActionResult EditStudent(int id)
@@ -102,8 +112,13 @@ namespace ClassPage.Controllers
         [HttpPost]
         public IActionResult EditStudent(int id, StudentDTO student)
         {
-            studentService.Edit(id, student);
-            return RedirectToAction("StudentDetails", "Directory", new { id });
+            if (ModelState.IsValid)
+            {
+                studentService.Edit(id, student);
+                return RedirectToAction("StudentDetails", "Directory", new { id });
+            }
+
+            return RedirectToAction("Error", "Home");
         }
 
         public IActionResult EditTeacher(int id)
@@ -119,8 +134,13 @@ namespace ClassPage.Controllers
         [HttpPost]
         public IActionResult EditTeacher(int id, TeacherDTO teacherDTO)
         {
-            teacherService.Edit(id, teacherDTO);
-            return RedirectToAction("TeacherDetails", "Directory", new { id });
+            if (ModelState.IsValid)
+            {
+                teacherService.Edit(id, teacherDTO);
+                return RedirectToAction("TeacherDetails", "Directory", new { id });
+            }
+
+            return RedirectToAction("Error", "Home");
         }
 
         public IActionResult DeleteStudent(int id)
@@ -149,8 +169,13 @@ namespace ClassPage.Controllers
         [HttpPost]
         public IActionResult AddSubject(SubjectDTO subject)
         {
-            subjectService.Add(subject);
-            return RedirectToAction("ManageSubjects");
+            if (ModelState.IsValid)
+            {
+                subjectService.Add(subject);
+                return RedirectToAction("ManageSubjects");
+            }
+
+            return RedirectToAction("Error", "Home");
         }
 
         public IActionResult EditSubject(int id)
@@ -162,8 +187,13 @@ namespace ClassPage.Controllers
         [HttpPost]
         public IActionResult EditSubject(int id, SubjectDTO subject)
         {
-            subjectService.Edit(id, subject);
-            return RedirectToAction("ManageSubjects");
+            if (ModelState.IsValid)
+            {
+                subjectService.Edit(id, subject);
+                return RedirectToAction("ManageSubjects");
+            }
+
+            return RedirectToAction("Error", "Home");
         }
 
         public IActionResult DeleteSubject(int id)
@@ -187,8 +217,13 @@ namespace ClassPage.Controllers
         [HttpPost]
         public IActionResult AddClass(ClassDTO classDTO)
         {
-            classService.Add(classDTO);
-            return RedirectToAction("ManageClasses");
+            if (ModelState.IsValid)
+            {
+                classService.Add(classDTO);
+                return RedirectToAction("ManageClasses");
+            }
+
+            return RedirectToAction("Error", "Home");
         }
 
         public IActionResult EditClass(int id)
@@ -203,8 +238,13 @@ namespace ClassPage.Controllers
         [HttpPost]
         public IActionResult EditClass(int id, ClassDTO classDTO)
         {
-            classService.Edit(id, classDTO);
-            return RedirectToAction("ManageClasses");
+            if (ModelState.IsValid)
+            {
+                classService.Edit(id, classDTO);
+                return RedirectToAction("ManageClasses");
+            }
+
+            return RedirectToAction("Error", "Home");
         }
 
         public IActionResult DeleteClass(int id)

@@ -1,14 +1,20 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClassPage.Models.DTOs
 {
     public class GradeDTO
     {
         public int Id { get; set; }
+        [Required]
         public double Value { get; set; }
+        [Required]
         public int SubjectId { get; set; }
+        [Required]
         public int TeacherId { get; set; }
+        [Required]
         public int StudentId { get; set; }
+        [Required]
         public DateTime DateAdded { get; set; }
         public string Description { get; set; }
     }

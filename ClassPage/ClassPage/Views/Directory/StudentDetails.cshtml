@@ -28,7 +28,10 @@
 <div>
     <p>Contact information:</p>
     <p>E-mail address: <a href="mailto:@Model.Email">@Model.Email</a></p>
-    <p>Telephone number: +359 @Model.Phone</p>
+    @if (Model.Phone != null)
+    {
+        <p>Telephone number: +359 @Model.Phone</p>
+    }
 </div>
 @if (!User.HasClaim("Role", "Student"))
 {
