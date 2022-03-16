@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ClassPage.Data;
 using ClassPage.Models;
 using ClassPage.Models.DTOs;
-using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal.Account.Manage;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassPage.Services
@@ -25,15 +22,22 @@ namespace ClassPage.Services
             {
                 Teacher teacher = toEntity(teacherDTO);
 
-                foreach (int subjectId in teacherDTO.SubjectIds)
+                if (teacherDTO.SubjectIds != null)
                 {
-                    teacher.TeachersSubjects.Add(new TeachersSubject { SubjectId = subjectId, Teacher = teacher });
+                    foreach (int subjectId in teacherDTO.SubjectIds)
+                    {
+                        teacher.TeachersSubjects.Add(new TeachersSubject { SubjectId = subjectId, Teacher = teacher });
+                    }
                 }
 
-                foreach (int classId in teacherDTO.ClassIds)
+                if (teacherDTO.ClassIds != null)
                 {
-                    teacher.ClassesTeachers.Add(new ClassesTeacher { ClassId = classId, Teacher = teacher });
+                    foreach (int classId in teacherDTO.ClassIds)
+                    {
+                        teacher.ClassesTeachers.Add(new ClassesTeacher { ClassId = classId, Teacher = teacher });
+                    }
                 }
+
                 _context.Teachers.Add(teacher);
                 _context.SaveChanges();
             }
@@ -53,15 +57,24 @@ namespace ClassPage.Services
                 _context.TeachersSubjects.RemoveRange(_context.TeachersSubjects.Where(t => t.TeacherId == id));
                 _context.ClassesTeachers.RemoveRange(_context.ClassesTeachers.Where(t => t.TeacherId == id));
 
-                foreach (int subjectId in teacher.SubjectIds)
+                if (teacher.SubjectIds != null)
                 {
-                    dbTeacher.TeachersSubjects.Add(new TeachersSubject { SubjectId = subjectId, Teacher = dbTeacher });
+                    foreach (int subjectId in teacher.SubjectIds)
+                    {
+                        dbTeacher.TeachersSubjects.Add(new TeachersSubject { SubjectId = subjectId, Teacher = dbTeacher });
+                    }
+
                 }
 
-                foreach (int classId in teacher.ClassIds)
+                if (teacher.ClassIds != null)
                 {
-                    dbTeacher.ClassesTeachers.Add(new ClassesTeacher { ClassId = classId, Teacher = dbTeacher });
+                    foreach (int classId in teacher.ClassIds)
+                    {
+                        dbTeacher.ClassesTeachers.Add(new ClassesTeacher { ClassId = classId, Teacher = dbTeacher });
+                    }
+
                 }
+
                 _context.Teachers.Update(dbTeacher);
                 _context.SaveChanges();
             }

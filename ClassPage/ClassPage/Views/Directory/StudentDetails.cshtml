@@ -19,7 +19,7 @@
 <p>
     Class:
     <b>
-        @Html.ActionLink((ViewBag.ClassList as ICollection<Class>).FirstOrDefault(c => c.Id == Model.ClassId).ClassName, "ClassDetails", "Directory", new { id = Model.ClassId })
+        @Html.ActionLink((ViewBag.ClassList as ICollection<ClassDTO>).FirstOrDefault(c => c.Id == Model.ClassId).ClassName, "ClassDetails", "Directory", new { id = Model.ClassId })
     </b>
 </p>
 
@@ -28,7 +28,10 @@
 <div>
     <p>Contact information:</p>
     <p>E-mail address: <a href="mailto:@Model.Email">@Model.Email</a></p>
-    <p>Telephone number: +359 @Model.Phone</p>
+    @if (Model.Phone != null)
+    {
+        <p>Telephone number: +359 @Model.Phone</p>
+    }
 </div>
 @if (!User.HasClaim("Role", "Student"))
 {

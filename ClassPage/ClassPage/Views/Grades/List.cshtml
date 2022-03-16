@@ -27,12 +27,14 @@ else
         @foreach (GradeDTO g in Model)
         {
             <tr>
-                <td>@((ViewBag.SubjectList as ICollection<Subject>).Single(s=>s.Id==g.SubjectId).SubjectName)</td>
+                <td>@((ViewBag.SubjectList as ICollection<SubjectDTO>).Single(s=>s.Id==g.SubjectId).SubjectName)</td>
                 <td>@g.Value</td>
                 <td>@g.DateAdded.ToShortDateString()</td>
                 @{
                     TeacherDTO currentTeacher = (ViewBag.TeacherList as ICollection<TeacherDTO>).Single(t => t.Id == g.TeacherId);
-                    <td>@currentTeacher.FirstName @currentTeacher.LastName</td>
+                    <td>
+                        @Html.ActionLink(currentTeacher.FirstName + " " + currentTeacher.LastName, "TeacherDetails", "Directory", new { id = g.TeacherId })
+                    </td>
                 }
                 <td>@g.Description</td>
                 @if (User.HasClaim("Role", "Admin") || !User.HasClaim("Role", "Student") && g.TeacherId == int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value))
@@ -40,6 +42,15 @@ else
                     <td>
                         @Html.ActionLink("Edit", "Edit", "Grades", new { gradeId = g.Id }, new { @class = "btn btn-warning" })
                         @Html.ActionLink("Delete", "Delete", "Grades", new { gradeId = g.Id }, new { @class = "btn btn-danger" })
+                    </td>
+                }
+                else if (User.HasClaim("Role", "Teacher"))
+                {
+                    <td>
+                        <button disabled class="btn btn-warning">Edit</button>
+                        <button disabled class="btn btn-danger">Delete</button>
+                        <br />
+                        <label>(Not your grade)</label>
                     </td>
                 }
             </tr>

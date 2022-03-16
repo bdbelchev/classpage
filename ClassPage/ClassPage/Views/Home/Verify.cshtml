@@ -8,12 +8,12 @@
     <p>After confirming, you will be logged out.</p>
     <br />
     <form asp-action="Verify" asp-controller="Home" method="post">
-        @if ((ViewBag.StudentList as ICollection<Student>).Select(s => s.Email).Contains(User.Identity.Name))
+        @if ((ViewBag.StudentList as ICollection<StudentDTO>).Select(s => s.Email).Contains(User.Identity.Name))
         {
             <p>
                 Found student:
                 @{
-                    Student student = (ViewBag.StudentList as ICollection<Student>
+                    StudentDTO student = (ViewBag.StudentList as ICollection<StudentDTO>
                         ).FirstOrDefault(s => s.Email == User.Identity.Name);
                     <b>@student.FirstName @student.LastName</b>
                     <input type="hidden" name="role" value="Student" />
@@ -22,12 +22,12 @@
             </p>
             <input type="submit" value="Confirm" class="btn btn-primary" />
         }
-        else if ((ViewBag.TeacherList as ICollection<Teacher>).Select(t => t.Email).Contains(User.Identity.Name))
+        else if ((ViewBag.TeacherList as ICollection<TeacherDTO>).Select(t => t.Email).Contains(User.Identity.Name))
         {
             <p>
                 Found teacher:
                 @{
-                    Teacher teacher = (ViewBag.TeacherList as ICollection<Teacher>
+                    TeacherDTO teacher = (ViewBag.TeacherList as ICollection<TeacherDTO>
                         ).FirstOrDefault(s => s.Email == User.Identity.Name);
                     <b>@teacher.FirstName @teacher.LastName</b>
                     <input type="hidden" name="role" value="Teacher" />
@@ -40,6 +40,7 @@
         {
             <p>No entries were found for this email address.</p>
             <p>Please check if you are using the correct e-mail address. If you are not in the student database, please contact your school administrator.</p>
+            <a href="/Identity/Account/Manage" class="btn btn-warning">Manage or delete my account</a>
         }
     </form>
 </div>

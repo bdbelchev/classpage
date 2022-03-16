@@ -7,23 +7,23 @@
 <form asp-action="EditStudent" asp-controller="Admin" asp-route-id="@Model.Id" method="post">
     <div class="form-group">
         <label>First Name</label>
-        <input type="text" class="form-control" value="@Model.FirstName" name="firstName" required />
+        <input type="text" class="form-control text-capitalize" value="@Model.FirstName" name="firstName" required />
     </div>
     <div class="form-group">
         <label>Middle Name</label>
-        <input type="text" class="form-control" value="@Model.MiddleName" name="middleName" />
+        <input type="text" class="form-control text-capitalize" value="@Model.MiddleName" name="middleName" />
     </div>
     <div class="form-group">
         <label>Last Name</label>
-        <input type="text" class="form-control" value="@Model.LastName" name="lastName" required />
+        <input type="text" class="form-control text-capitalize" value="@Model.LastName" name="lastName" required />
     </div>
     <div class="form-group">
         <label>Class</label>
         <select class="form-control" name="classId">
             <option disabled="disabled">Current class</option>
-            <option selected="selected" value="@Model.ClassId">@((ViewBag.ClassList as ICollection<Class>).FirstOrDefault(c => c.Id == Model.ClassId).ClassName)</option>
+            <option selected="selected" value="@Model.ClassId">@((ViewBag.ClassList as ICollection<ClassDTO>).FirstOrDefault(c => c.Id == Model.ClassId).ClassName)</option>
             <option disabled="disabled">Select class</option>
-            @foreach (Class c in ViewBag.ClassList)
+            @foreach (ClassDTO c in ViewBag.ClassList)
             {
                 <option value="@c.Id">@c.ClassName</option>
             }
@@ -35,7 +35,7 @@
     </div>
     <div class="form-group">
         <label>Telephone number</label>
-        <input name="phone" class="form-control" value="@Model.Phone" type="tel" />
+        <input name="phone" class="form-control" value="@Model.Phone" type="tel" pattern="[0-9]{9}"/>
     </div>
     <input type="submit" value="Go" class="btn btn-primary" />
 </form>

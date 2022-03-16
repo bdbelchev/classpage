@@ -3,7 +3,6 @@ using System;
 using ClassPage.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClassPage.Migrations
 {

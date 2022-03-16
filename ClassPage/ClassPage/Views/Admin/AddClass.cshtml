@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Add Class to DB";
+}
+
+<form asp-action="AddClass" asp-controller="Admin" method="post">
+    <div class="form-group">
+        <label>Class Name</label>
+        <input type="text" class="form-control text-uppercase" name="className" required pattern="^([1-9]|1[012])[A-Za-zА-Яа-я]{1}" />
+        <label>Maximum 3 characters, in format {year (1-12)}{letter}</label>
+    </div>
+    <div class="form-group">
+        <label>Main Teacher</label>
+        <select class="form-control" name="mainTeacherId">
+            <option disabled="disabled" selected="selected">Select teacher</option>
+            @foreach (TeacherDTO teacher in ViewBag.TeacherList)
+            {
+                if (teacher.MainClassId == null)
+                {
+                    <option value="@teacher.Id">@teacher.FirstName @teacher.LastName</option>
+                }
+                else
+                {
+                    <option disabled value="@teacher.Id">@teacher.FirstName @teacher.LastName (has a class)</option>
+                }
+            }
+        </select>
+    </div>
+    <input type="submit" value="Go" class="btn btn-primary" />
+</form>

@@ -1,41 +1,38 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ClassPage.Data;
-using ClassPage.Models;
 using ClassPage.Models.DTOs;
 using ClassPage.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 
 namespace ClassPage.Controllers
 {
     [Authorize(Policy = "IsMemberOfSchool")]
     public class DirectoryController : Controller
     {
-        private readonly SchooldbContext _context;
         private readonly ITeacherService teacherService;
         private readonly IStudentService studentService;
+        private readonly ISubjectService subjectService;
+        private readonly IClassService classService;
 
-        public DirectoryController(SchooldbContext context, ITeacherService teacherService, IStudentService studentService)
+        public DirectoryController(ITeacherService teacherService, IStudentService studentService, ISubjectService subjectService, IClassService classService)
         {
-            _context = context;
             this.teacherService = teacherService;
             this.studentService = studentService;
+            this.subjectService = subjectService;
+            this.classService = classService;
         }
 
         public IActionResult Index()
         {
-            ViewBag.ClassList = _context.Classes.ToList();
+            ViewBag.ClassList = classService.GetAll();
             return View();
         }
 
         public IActionResult ListTeachers()
         {
             List<TeacherDTO> teachers = teacherService.GetAll();
-            ViewBag.SubjectList = _context.Subjects.ToList();
+
+            ViewBag.SubjectList = subjectService.GetAll();
 
             return View(teachers);
         }
@@ -43,7 +40,8 @@ namespace ClassPage.Controllers
         public IActionResult ListStudents()
         {
             List<StudentDTO> students = studentService.GetAll();
-            ViewBag.ClassList = _context.Classes.ToList();
+
+            ViewBag.ClassList = classService.GetAll();
 
             return View(students);
         }
@@ -52,8 +50,8 @@ namespace ClassPage.Controllers
         {
             TeacherDTO teacher = teacherService.GetById(id);
 
-            ViewBag.ClassList = _context.Classes.ToList();
-            ViewBag.SubjectList = _context.Subjects.ToList();
+            ViewBag.ClassList = classService.GetAll();
+            ViewBag.SubjectList = subjectService.GetAll();
 
             return View(teacher);
         }
@@ -61,14 +59,19 @@ namespace ClassPage.Controllers
         public IActionResult StudentDetails(int id)
         {
             StudentDTO student = studentService.GetById(id);
-            ViewBag.ClassList = _context.Classes.ToList();
+
+            ViewBag.ClassList = classService.GetAll();
 
             return View(student);
         }
 
         public IActionResult ClassDetails(int id)
         {
-            Class schoolClass = _context.Classes.Include(c => c.MainTeacher).Include(s => s.Students).Include(t => t.ClassesTeachers).ThenInclude(t => t.Teacher).ThenInclude(s => s.TeachersSubjects).ThenInclude(s => s.Subject).FirstOrDefault(c => c.Id == id);
+            ClassDTO schoolClass = classService.GetById(id);
+
+            ViewBag.TeacherList = teacherService.GetAll();
+            ViewBag.StudentList = studentService.GetAll();
+            ViewBag.SubjectList = subjectService.GetAll();
 
             return View(schoolClass);
         }

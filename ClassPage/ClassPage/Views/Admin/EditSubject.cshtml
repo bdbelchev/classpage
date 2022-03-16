@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Edit Subject";
+}
+
+@model SubjectDTO
+
+<form asp-action="EditSubject" asp-controller="Admin" asp-route-id="@Model.Id" method="post">
+    <div class="form-group">
+        <label>Subject Name</label>
+        <input type="text" class="form-control text-capitalize" name="subjectName" value="@Model.SubjectName" required />
+    </div>
+    <input type="submit" value="Go" class="btn btn-primary" />
+</form>

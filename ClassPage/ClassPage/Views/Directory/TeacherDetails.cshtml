@@ -16,7 +16,7 @@
     <p>Last name: <b>@Model.LastName</b></p>
 
     <p>
-        Subjects: <b>@string.Join(", ", (ViewBag.SubjectList as ICollection<Subject>).Where(s => Model.SubjectIds.Contains(s.Id)).Select(s => s.SubjectName))</b>
+        Subjects: <b>@string.Join(", ", (ViewBag.SubjectList as ICollection<SubjectDTO>).Where(s => Model.SubjectIds.Contains(s.Id)).Select(s => s.SubjectName))</b>
     </p>
 
     @if (Model.MainClassId != null)
@@ -24,7 +24,7 @@
         <p>
             Main teacher of class:
             <b>
-                @Html.ActionLink((ViewBag.ClassList as ICollection<Class>).FirstOrDefault(c => c.Id == Model.MainClassId).ClassName, "ClassDetails", "Directory", new { id = Model.MainClassId })
+                @Html.ActionLink((ViewBag.ClassList as ICollection<ClassDTO>).FirstOrDefault(c => c.Id == Model.MainClassId).ClassName, "ClassDetails", "Directory", new { id = Model.MainClassId })
             </b>
         </p>
     }
@@ -34,7 +34,11 @@
 <div>
     <p>Contact information:</p>
     <p>E-mail address: <a href="mailto:@Model.Email">@Model.Email</a></p>
-    <p>Telephone number: +359 @Model.Phone</p>
+    @if (Model.Phone != null)
+    {
+
+        <p>Telephone number: +359 @Model.Phone</p>
+    }
 </div>
 
 <br />
@@ -42,7 +46,7 @@
 <div>
     <p>Teaches classes:</p>
 
-    @foreach (Class c in (ViewBag.ClassList as ICollection<Class>).Where(c => Model.ClassIds.Contains(c.Id)))
+    @foreach (ClassDTO c in (ViewBag.ClassList as ICollection<ClassDTO>).Where(c => Model.ClassIds.Contains(c.Id)))
     {
         <p>
             @Html.ActionLink(c.ClassName, "ClassDetails", "Directory", new { id = c.Id })

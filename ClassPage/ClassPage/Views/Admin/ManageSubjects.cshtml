@@ -1,0 +1,28 @@
+﻿@model List<SubjectDTO>
+
+@Html.ActionLink("Add new subject", "AddSubject", "Admin", null, new { @class = "btn btn-primary" })
+
+<br />
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Subject</th>
+            <th scope="col">Operations</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (SubjectDTO s in Model.OrderBy(s => s.Id))
+        {
+            <tr>
+                <td>@s.Id</td>
+                <td>@s.SubjectName</td>
+                <td>
+                    @Html.ActionLink("Edit", "EditSubject", "Admin", new { id = s.Id }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Delete", "DeleteSubject", "Admin", new { id = s.Id }, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
