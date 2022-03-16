@@ -7,10 +7,11 @@
     @Html.ActionLink("List teachers", "ListTeachers", "Directory", null, new { @class = "btn btn-primary" })
     @Html.ActionLink("List students", "ListStudents", "Directory", null, new { @class = "btn btn-primary" })
 </div>
+<br />
 <div>
     <h2>Details by class: </h2>
     @foreach (ClassDTO c in ViewBag.ClassList)
     {
-        @Html.ActionLink(c.ClassName, "ClassDetails", "Directory", new { id = c.Id }, new { @class = "btn btn-primary" })
+        @Html.ActionLink(c.ClassName, "ClassDetails", "Directory", new { id = c.Id }, new { @class = "btn btn-primary mr-1" })
     }
 </div>
