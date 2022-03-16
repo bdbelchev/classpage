@@ -7,6 +7,7 @@ namespace ClassPage.Models.DTOs
     {
         public int Id { get; set; }
         [Required]
+        [Range(2, 6)]
         public double Value { get; set; }
         [Required]
         public int SubjectId { get; set; }
