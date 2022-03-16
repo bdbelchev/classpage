@@ -5,47 +5,86 @@
 <div class="text-center">
     @if (User.HasClaim("Role", "Student"))
     {
-        <h1 class="display-4">Welcome, @((ViewBag.StudentList as ICollection<Student>).FirstOrDefault(s=>s.Id == int.Parse(User.Claims.FirstOrDefault(c => c.Type == "EntityID").Value)).FirstName)!</h1>
-        <ul>
-            <li>
-                @Html.ActionLink("View your grades", "Index", "Grades")
-            </li>
-            <li>
-                @Html.ActionLink("View school directory", "Index", "Directory")
-            </li>
-        </ul>
+        <h1 class="display-4">Welcome, @((ViewBag.StudentList as ICollection<Student>).FirstOrDefault(s => s.Id == int.Parse(User.Claims.FirstOrDefault(c => c.Type == "EntityID").Value)).FirstName)!</h1>
+        <hr />
+        <div class="card-group">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">My grades</h5>
+                    <p class="card-text">View your current grades.</p>
+                    @Html.ActionLink("Go", "Index", "Grades")
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">School directory</h5>
+                    <p class="card-text">View the school directory and obtain contact information of your classmates and teachers.</p>
+                    @Html.ActionLink("Go", "Index", "Directory")
+                </div>
+            </div>
+        </div>
     }
     else if (User.HasClaim("Role", "Teacher"))
     {
-        <h1 class="display-4">Welcome, Mr./Mrs. @((ViewBag.TeacherList as ICollection<Teacher>).FirstOrDefault(s=>s.Id == int.Parse(User.Claims.FirstOrDefault(c => c.Type == "EntityID").Value)).LastName)!</h1>
-        <ul>
-            <li>
-                @Html.ActionLink("Add new grades", "Add", "Grades", new { teacherId = int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value) })
-            </li>
-            <li>
-                @Html.ActionLink("Lookup student grades", "Index", "Grades")
-            </li>
-            <li>
-                @Html.ActionLink("View school directory", "Index", "Directory")
-            </li>
-        </ul>
+        <h1 class="display-4">Welcome, Mr./Mrs. @((ViewBag.TeacherList as ICollection<Teacher>).FirstOrDefault(s => s.Id == int.Parse(User.Claims.FirstOrDefault(c => c.Type == "EntityID").Value)).LastName)!</h1>
+        <hr />
+        <div class="card-group">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Add grade</h5>
+                    <p class="card-text">Add a new grade for one of your students.</p>
+                    @Html.ActionLink("Go", "Add", "Grades", new { teacherId = int.Parse(User.Claims.Single(c => c.Type == "EntityID").Value) })
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Grade lookup</h5>
+                    <p class="card-text">Lookup current grades of students and edit or remove grades added by you.</p>
+                    @Html.ActionLink("Go", "Index", "Grades")
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">School directory</h5>
+                    <p class="card-text">View the school directory and obtain contact information of your coworkers and students.</p>
+                    @Html.ActionLink("Go", "Index", "Directory")
+                </div>
+            </div>
+        </div>
     }
     else if (User.HasClaim("Role", "Admin"))
     {
         <h1 class="display-4">Welcome, Administrator!</h1>
-        <ul>
-            <li>
-                @Html.ActionLink("Add/remove students and teachers from school DB", "Index", "Admin")
-            </li>
-            <li>
-                @Html.ActionLink("Add new grades", "Add", "Grades", new { teacherId = 1 })
-            </li>
-            <li>
-                @Html.ActionLink("Lookup student grades", "Index", "Grades")
-            </li>
-            <li>
-                @Html.ActionLink("View and manage school directory", "Index", "Directory")
-            </li>
-        </ul>
+        <hr />
+        <div class="card-group">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Manage school DB</h5>
+                    <p class="card-text">Add, remove or edit students, teachers, classes and subjects in your school database.</p>
+                    @Html.ActionLink("Go", "Index", "Admin")
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Add grade</h5>
+                    <p class="card-text">Add a new grade for one of the students.</p>
+                    @Html.ActionLink("Go", "Add", "Grades", new { teacherId = 1 })
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Grade lookup</h5>
+                    <p class="card-text">Lookup current grades of students and edit or remove all grades.</p>
+                    @Html.ActionLink("Go", "Index", "Grades")
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">School directory</h5>
+                    <p class="card-text">View the school directory, obtain or edit contact information of your students and teachers.</p>
+                    @Html.ActionLink("Go", "Index", "Directory")
+                </div>
+            </div>
+        </div>
     }
 </div>
