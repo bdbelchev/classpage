@@ -18,81 +18,72 @@ namespace ClassPage.Services
 
         public void Add(TeacherDTO teacherDTO)
         {
-            using (_context)
+            Teacher teacher = toEntity(teacherDTO);
+
+            if (teacherDTO.SubjectIds != null)
             {
-                Teacher teacher = toEntity(teacherDTO);
-
-                if (teacherDTO.SubjectIds != null)
+                foreach (int subjectId in teacherDTO.SubjectIds)
                 {
-                    foreach (int subjectId in teacherDTO.SubjectIds)
-                    {
-                        teacher.TeachersSubjects.Add(new TeachersSubject { SubjectId = subjectId, Teacher = teacher });
-                    }
+                    teacher.TeachersSubjects.Add(new TeachersSubject { SubjectId = subjectId, Teacher = teacher });
                 }
-
-                if (teacherDTO.ClassIds != null)
-                {
-                    foreach (int classId in teacherDTO.ClassIds)
-                    {
-                        teacher.ClassesTeachers.Add(new ClassesTeacher { ClassId = classId, Teacher = teacher });
-                    }
-                }
-
-                _context.Teachers.Add(teacher);
-                _context.SaveChanges();
             }
+
+            if (teacherDTO.ClassIds != null)
+            {
+                foreach (int classId in teacherDTO.ClassIds)
+                {
+                    teacher.ClassesTeachers.Add(new ClassesTeacher { ClassId = classId, Teacher = teacher });
+                }
+            }
+
+            _context.Teachers.Add(teacher);
+            _context.SaveChanges();
         }
 
         public void Edit(int id, TeacherDTO teacher)
         {
-            using (_context)
+            Teacher dbTeacher = _context.Teachers.FirstOrDefault(t => t.Id == id);
+            dbTeacher.FirstName = teacher.FirstName;
+            dbTeacher.MiddleName = teacher.MiddleName;
+            dbTeacher.LastName = teacher.LastName;
+            dbTeacher.Email = teacher.Email;
+            dbTeacher.Phone = teacher.Phone;
+
+            _context.TeachersSubjects.RemoveRange(_context.TeachersSubjects.Where(t => t.TeacherId == id));
+            _context.ClassesTeachers.RemoveRange(_context.ClassesTeachers.Where(t => t.TeacherId == id));
+
+            if (teacher.SubjectIds != null)
             {
-                Teacher dbTeacher = _context.Teachers.FirstOrDefault(t => t.Id == id);
-                dbTeacher.FirstName = teacher.FirstName;
-                dbTeacher.MiddleName = teacher.MiddleName;
-                dbTeacher.LastName = teacher.LastName;
-                dbTeacher.Email = teacher.Email;
-                dbTeacher.Phone = teacher.Phone;
-
-                _context.TeachersSubjects.RemoveRange(_context.TeachersSubjects.Where(t => t.TeacherId == id));
-                _context.ClassesTeachers.RemoveRange(_context.ClassesTeachers.Where(t => t.TeacherId == id));
-
-                if (teacher.SubjectIds != null)
+                foreach (int subjectId in teacher.SubjectIds)
                 {
-                    foreach (int subjectId in teacher.SubjectIds)
-                    {
-                        dbTeacher.TeachersSubjects.Add(new TeachersSubject { SubjectId = subjectId, Teacher = dbTeacher });
-                    }
-
+                    dbTeacher.TeachersSubjects.Add(new TeachersSubject { SubjectId = subjectId, Teacher = dbTeacher });
                 }
 
-                if (teacher.ClassIds != null)
-                {
-                    foreach (int classId in teacher.ClassIds)
-                    {
-                        dbTeacher.ClassesTeachers.Add(new ClassesTeacher { ClassId = classId, Teacher = dbTeacher });
-                    }
-
-                }
-
-                _context.Teachers.Update(dbTeacher);
-                _context.SaveChanges();
             }
+
+            if (teacher.ClassIds != null)
+            {
+                foreach (int classId in teacher.ClassIds)
+                {
+                    dbTeacher.ClassesTeachers.Add(new ClassesTeacher { ClassId = classId, Teacher = dbTeacher });
+                }
+
+            }
+
+            _context.Teachers.Update(dbTeacher);
+            _context.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            using (_context)
-            {
-                Teacher teacher = _context.Teachers.FirstOrDefault(t => t.Id == id);
+            Teacher teacher = _context.Teachers.FirstOrDefault(t => t.Id == id);
 
-                _context.TeachersSubjects.RemoveRange(_context.TeachersSubjects.Where(t => t.TeacherId == id));
-                _context.ClassesTeachers.RemoveRange(_context.ClassesTeachers.Where(t => t.TeacherId == id));
-                _context.Grades.RemoveRange(_context.Grades.Where(t => t.TeacherId == id));
+            _context.TeachersSubjects.RemoveRange(_context.TeachersSubjects.Where(t => t.TeacherId == id));
+            _context.ClassesTeachers.RemoveRange(_context.ClassesTeachers.Where(t => t.TeacherId == id));
+            _context.Grades.RemoveRange(_context.Grades.Where(t => t.TeacherId == id));
 
-                _context.Teachers.Remove(teacher);
-                _context.SaveChanges();
-            }
+            _context.Teachers.Remove(teacher);
+            _context.SaveChanges();
         }
 
         public TeacherDTO GetById(int id)
