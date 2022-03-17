@@ -26,7 +26,6 @@ namespace ClassPage.Services
         public void Edit(int id, ClassDTO classDTO)
         {
             Class dbClass = _context.Classes.FirstOrDefault(s => s.Id == id);
-            dbClass.Id = classDTO.Id;
             dbClass.ClassName = classDTO.ClassName;
             dbClass.MainTeacherId = classDTO.MainTeacherId;
 

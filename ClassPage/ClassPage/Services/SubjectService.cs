@@ -26,7 +26,6 @@ namespace ClassPage.Services
         public void Edit(int id, SubjectDTO subjectDTO)
         {
             Subject subject = _context.Subjects.FirstOrDefault(s => s.Id == id);
-            subject.Id = subjectDTO.Id;
             subject.SubjectName = subjectDTO.SubjectName;
 
             _context.Subjects.Update(subject);

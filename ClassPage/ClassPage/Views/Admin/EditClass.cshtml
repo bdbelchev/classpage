@@ -11,7 +11,7 @@
         <label>Maximum 3 characters, in format {year (1-12)}{letter}</label>
     </div>
     <div class="form-group">
-        <select class="form-control" name="mainTeacherId">
+        <select class="form-control" name="mainTeacherId" required>
             <option disabled="disabled">Current teacher</option>
             @{
                 TeacherDTO currentTeacher = (ViewBag.TeacherList as ICollection<TeacherDTO>).Single(t => t.Id == Model.MainTeacherId);
