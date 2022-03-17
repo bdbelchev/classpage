@@ -8,6 +8,8 @@ namespace ClassPage.Models.DTOs
         [Required]
         [StringLength(3)]
         public string ClassName { get; set; }
+        [Required]
+        [Range(1, int.MaxValue)]
         public int MainTeacherId { get; set; }
     }
 }
