@@ -1,17 +1,13 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ClassPage.Data;
 using ClassPage.Models;
 using ClassPage.Models.DTOs;
 using ClassPage.Services;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
 
 namespace ClassPage.Tests
 {
@@ -101,7 +97,7 @@ namespace ClassPage.Tests
         [Test]
         public void TestAdd()
         {
-            ClassDTO classDto = new ClassDTO() { ClassName = "Class3", MainTeacherId = 3 };
+            ClassDTO classDto = new ClassDTO { ClassName = "Class3", MainTeacherId = 3 };
             classService.Add(classDto);
 
             Class dbClass = context.Classes.FirstOrDefault(s => s.Id == 3);
@@ -111,7 +107,7 @@ namespace ClassPage.Tests
         [Test]
         public void TestEdit()
         {
-            ClassDTO classDto = new ClassDTO() { ClassName = "EditClass2", MainTeacherId = 2 };
+            ClassDTO classDto = new ClassDTO { ClassName = "EditClass2", MainTeacherId = 2 };
             classService.Edit(2, classDto);
 
             Class dbClass = context.Classes.FirstOrDefault(s => s.Id == 2);

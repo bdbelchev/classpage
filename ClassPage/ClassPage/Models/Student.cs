@@ -4,7 +4,7 @@
 
 namespace ClassPage.Models
 {
-    public partial class Student
+    public class Student
     {
         public Student()
         {

@@ -1,17 +1,14 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ClassPage.Data;
 using ClassPage.Models;
 using ClassPage.Models.DTOs;
 using ClassPage.Services;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
 
 namespace ClassPage.Tests
 {
@@ -125,7 +122,7 @@ namespace ClassPage.Tests
         [Test]
         public void TestEdit()
         {
-            GradeDTO gradeDto = new GradeDTO() { Value = 4.49, SubjectId = 1, TeacherId = 1, StudentId = 1 };
+            GradeDTO gradeDto = new GradeDTO { Value = 4.49, SubjectId = 1, TeacherId = 1, StudentId = 1 };
             gradeService.Edit(2, gradeDto);
 
             Grade dbGrade = context.Grades.FirstOrDefault(s => s.Id == 2);

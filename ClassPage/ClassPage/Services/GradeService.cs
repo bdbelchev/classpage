@@ -12,7 +12,7 @@ namespace ClassPage.Services
 
         public GradeService(SchooldbContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
         public void Add(GradeDTO gradeDto)

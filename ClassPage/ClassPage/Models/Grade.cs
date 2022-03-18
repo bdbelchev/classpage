@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ClassPage.Models
 {
-    public partial class Grade
+    public class Grade
     {
         public int Id { get; set; }
         public double Value { get; set; }

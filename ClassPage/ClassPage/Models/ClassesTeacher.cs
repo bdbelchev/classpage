@@ -2,7 +2,7 @@
 
 namespace ClassPage.Models
 {
-    public partial class ClassesTeacher
+    public class ClassesTeacher
     {
         public int ClassId { get; set; }
         public int TeacherId { get; set; }
