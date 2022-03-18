@@ -26,7 +26,7 @@
 <h1>Add grade:</h1>
 @if (User.HasClaim("Role", "Admin"))
 {
-    @Html.ActionLink("Go", "Add", "Grades", new { teacherId = 1 }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Go", "Add", "Grades", new { teacherId = (ViewBag.TeacherList as ICollection<TeacherDTO>).First().Id }, new { @class = "btn btn-primary" })
 }
 else
 {
